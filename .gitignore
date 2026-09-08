@@ -1,0 +1,50 @@
+# Environment variables - NEVER commit these
+backend/.env
+.env
+*.env
+
+# Python
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/**/*.pyo
+*.pyc
+*.pyo
+__pycache__/
+
+# Node
+frontend/node_modules/
+node_modules/
+frontend/dist/
+dist/
+
+# Vite
+frontend/.vite/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp files
+*.tmp
+*.temp
+/tmp/
+
+# Build outputs
+frontend/build/
+backend/build/
+
+# Qodo (already in your folder)
+.qodo/
