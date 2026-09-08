@@ -4,1538 +4,1601 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>CreatorOS — One video. Every platform.</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#07070f;
-  --s1:#0d0d1a;
-  --s2:#111120;
-  --s3:#16162a;
-  --b1:#1e1e35;
-  --b2:#2a2a45;
-  --b3:#38385a;
-  --pu:#7c6cfc;
-  --pu2:#5b4de8;
-  --pu-a:#7c6cfc18;
-  --pu-b:#7c6cfc30;
-  --gr:#3dd68c;
-  --gr-a:#0d2e1e;
-  --gr-b:#1a4a2e;
-  --or:#ff6b35;
-  --or-a:#2a1008;
-  --re:#ff4f4f;
-  --yt:#ff0000;
-  --tk:#000000;
-  --ig-a:#833ab4;
-  --ig-b:#fd1d1d;
-  --tx:#eeeef8;
-  --t2:#9898b8;
-  --t3:#55556a;
-  --t4:#333348;
-  --mono:'JetBrains Mono',monospace
+  /* core palette */
+  --ink:#08090e;
+  --ink1:#0e0f18;
+  --ink2:#13151f;
+  --ink3:#1a1c28;
+  --ink4:#242638;
+  --line:#ffffff0d;
+  --line2:#ffffff16;
+  --line3:#ffffff22;
+
+  /* accent — electric violet */
+  --v:#8b5cf6;
+  --v2:#7c3aed;
+  --v3:#6d28d9;
+  --va8:#8b5cf614;
+  --va16:#8b5cf628;
+  --va32:#8b5cf650;
+
+  /* green — success / live */
+  --g:#22d3a0;
+  --ga:#22d3a014;
+  --gb:#22d3a030;
+
+  /* amber — pending / scheduled */
+  --a:#f59e0b;
+  --aa:#f59e0b14;
+
+  /* red alert */
+  --r:#ef4444;
+  --ra:#ef444414;
+
+  /* text */
+  --t0:#f8f8fc;
+  --t1:#c4c4d8;
+  --t2:#8080a0;
+  --t3:#40405a;
+
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',sans-serif;
+  --display:'Syne',sans-serif;
+
+  --rad:14px;
+  --rad-sm:9px;
+  --rad-lg:20px;
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden}
-button{font-family:'Inter',sans-serif;cursor:pointer}
-input,select,textarea{font-family:'Inter',sans-serif}
+body{background:var(--ink);color:var(--t0);font-family:var(--sans);font-size:14px;line-height:1.6;overflow-x:hidden}
+button,input,select,textarea{font-family:var(--sans)}
+button{cursor:pointer}
 
-/* ─── LANDING ───────────────────────────────────────────── */
+/* ─── SCROLLBAR ─────────────────────────────── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--ink4);border-radius:4px}
+
+/* ─── LANDING ───────────────────────────────── */
 #land{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  text-align:center;padding:80px 24px;
+  padding:100px 24px 80px;text-align:center;
   position:relative;overflow:hidden
 }
-#land::before{
-  content:'';position:absolute;top:-300px;left:50%;transform:translateX(-50%);
-  width:1000px;height:600px;
-  background:radial-gradient(ellipse,#7c6cfc14 0%,transparent 68%);
+.land-glow{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:900px;height:500px;
+  background:radial-gradient(ellipse at 50% 0%,#8b5cf61a 0%,transparent 65%);
   pointer-events:none
 }
-#land::after{
-  content:'';position:absolute;bottom:-200px;left:50%;transform:translateX(-50%);
-  width:800px;height:400px;
-  background:radial-gradient(ellipse,#3dd68c08 0%,transparent 68%);
+.land-glow2{
+  position:absolute;bottom:-100px;right:-100px;
+  width:600px;height:400px;
+  background:radial-gradient(ellipse,#22d3a008 0%,transparent 70%);
   pointer-events:none
 }
-.land-chip{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--pu-a);border:1px solid var(--pu-b);
-  color:var(--pu);border-radius:20px;
-  padding:6px 14px;font-size:12px;font-weight:600;
-  margin-bottom:36px;letter-spacing:.04em
+
+/* eyebrow chip — intentionally minimal */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line3);background:var(--ink2);
+  border-radius:100px;padding:5px 14px 5px 10px;
+  font-size:11px;font-weight:500;color:var(--t2);
+  margin-bottom:44px;letter-spacing:.01em
 }
-.land-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--pu)}
-.land-h1{
-  font-size:clamp(38px,6.5vw,80px);font-weight:900;
-  line-height:1.05;color:var(--tx);max-width:820px;
-  margin-bottom:24px;letter-spacing:-.02em
+.eyebrow-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--g);box-shadow:0 0 8px var(--g)
 }
-.land-h1 span{
-  background:linear-gradient(135deg,var(--pu),#a78bfa);
+
+.land-h{
+  font-family:var(--display);
+  font-size:clamp(44px,7vw,92px);font-weight:800;
+  line-height:.98;letter-spacing:-.03em;
+  color:var(--t0);max-width:860px;margin-bottom:28px
+}
+.land-h em{
+  font-style:normal;
+  background:linear-gradient(125deg,var(--v) 20%,#c084fc 80%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent
 }
 .land-sub{
-  font-size:18px;color:var(--t2);max-width:520px;
-  line-height:1.7;margin-bottom:52px;font-weight:400
+  font-size:17px;color:var(--t2);max-width:480px;
+  line-height:1.75;margin-bottom:52px;font-weight:400
 }
-.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn-hero{
-  background:linear-gradient(135deg,var(--pu),var(--pu2));
-  color:#fff;border:none;border-radius:14px;
-  padding:17px 38px;font-size:16px;font-weight:700;
-  transition:transform .15s,box-shadow .15s;
-  box-shadow:0 0 50px #7c6cfc28
-}
-.btn-hero:hover{transform:translateY(-2px);box-shadow:0 0 70px #7c6cfc44}
-.btn-ghost{
-  background:transparent;color:var(--t2);
-  border:1px solid var(--b2);border-radius:14px;
-  padding:17px 38px;font-size:16px;font-weight:600;
-  transition:color .15s,border-color .15s
-}
-.btn-ghost:hover{color:var(--tx);border-color:var(--pu)}
-.platform-strip{
-  display:flex;gap:20px;align-items:center;justify-content:center;
-  flex-wrap:wrap;margin-top:56px;opacity:.6
-}
-.plat-pill{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--t2)
-}
-.plat-dot{width:8px;height:8px;border-radius:50%}
-.yt-c{background:#ff0000}
-.tk-c{background:#69C9D0}
-.ig-c{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}
-.x-c{background:#e7e7e7}
 
-/* ─── HOW IT WORKS ──────────────────────────────────────── */
-#hiw{max-width:900px;margin:0 auto;padding:120px 24px}
-.section-label{
-  font-size:11px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--pu);margin-bottom:18px
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  background:var(--v);color:#fff;border:none;
+  border-radius:var(--rad-sm);padding:14px 32px;
+  font-size:14px;font-weight:600;
+  font-family:var(--display);letter-spacing:.01em;
+  transition:background .15s,transform .12s;
+  box-shadow:0 0 40px #8b5cf630
 }
-.section-h2{
-  font-size:clamp(28px,4vw,52px);font-weight:800;
-  color:var(--tx);line-height:1.1;letter-spacing:-.02em;margin-bottom:16px
+.btn-primary:hover{background:var(--v2);transform:translateY(-1px)}
+.btn-outline{
+  background:transparent;color:var(--t1);
+  border:1px solid var(--line3);border-radius:var(--rad-sm);
+  padding:14px 32px;font-size:14px;font-weight:500;
+  transition:border-color .15s,color .15s
 }
-.section-sub{font-size:16px;color:var(--t2);line-height:1.7;max-width:560px}
-.flow-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:0;margin-top:64px;
-  border:1px solid var(--b1);border-radius:20px;overflow:hidden
-}
-.flow-cell{
-  padding:32px;border-right:1px solid var(--b1);
-  border-bottom:1px solid var(--b1)
-}
-.flow-cell:nth-child(even){border-right:none}
-.flow-cell:nth-last-child(-n+2){border-bottom:none}
-.flow-num{
-  font-family:var(--mono);font-size:11px;font-weight:500;
-  color:var(--pu);margin-bottom:14px;letter-spacing:.06em
-}
-.flow-title{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:8px}
-.flow-desc{font-size:13px;color:var(--t2);line-height:1.65}
+.btn-outline:hover{color:var(--t0);border-color:var(--line3)}
 
-/* ─── FEATURE STRIP ─────────────────────────────────────── */
-#feats{background:var(--s1);border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);padding:90px 24px}
-.feats-inner{max-width:1000px;margin:0 auto}
+/* platform row */
+.plat-strip{
+  display:flex;gap:0;align-items:stretch;
+  margin-top:64px;border:1px solid var(--line2);
+  border-radius:var(--rad);overflow:hidden;background:var(--ink2)
+}
+.plat-item{
+  padding:14px 22px;display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:500;color:var(--t2);
+  border-right:1px solid var(--line);
+  white-space:nowrap
+}
+.plat-item:last-child{border-right:none}
+.pdot{width:7px;height:7px;border-radius:50%}
+.pd-yt{background:#ff0000}
+.pd-tk{background:#69C9D0}
+.pd-ig{background:linear-gradient(135deg,#833ab4,#fd1d1d)}
+.pd-x{background:#e7e7e7}
+
+/* ─── HOW IT WORKS ──────────────────────────── */
+#hiw{padding:140px 24px;max-width:1100px;margin:0 auto}
+.section-tag{font-size:11px;color:var(--v);letter-spacing:.1em;font-weight:600;margin-bottom:20px;font-family:var(--mono)}
+.section-h{
+  font-family:var(--display);font-size:clamp(30px,4.5vw,56px);
+  font-weight:800;letter-spacing:-.025em;color:var(--t0);
+  line-height:1.05;margin-bottom:18px
+}
+.section-sub{font-size:16px;color:var(--t2);line-height:1.75;max-width:500px}
+
+.flow-steps{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:1px;background:var(--line);
+  margin-top:72px;border:1px solid var(--line);
+  border-radius:var(--rad-lg);overflow:hidden
+}
+.flow-step{
+  background:var(--ink);padding:36px 32px;
+  position:relative
+}
+.fstep-num{
+  font-family:var(--mono);font-size:10px;color:var(--t3);
+  margin-bottom:16px;letter-spacing:.04em
+}
+.fstep-icon{font-size:22px;margin-bottom:14px}
+.fstep-t{font-size:15px;font-weight:600;color:var(--t0);margin-bottom:8px;font-family:var(--display)}
+.fstep-d{font-size:13px;color:var(--t2);line-height:1.7}
+
+/* ─── FEATURES ──────────────────────────────── */
+#feats{padding:0 24px 140px;max-width:1100px;margin:0 auto}
 .feat-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:14px;margin-top:56px
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--rad-lg);overflow:hidden;
+  margin-top:56px
 }
-.feat-card{
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:16px;padding:24px;
-  transition:border-color .2s,transform .2s
+.feat{
+  background:var(--ink1);padding:28px 24px
 }
-.feat-card:hover{border-color:var(--b2);transform:translateY(-2px)}
-.feat-ic{font-size:24px;margin-bottom:14px}
-.feat-t{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:8px}
-.feat-d{font-size:13px;color:var(--t2);line-height:1.6}
+.feat-icon{font-size:20px;margin-bottom:14px}
+.feat-t{font-size:14px;font-weight:600;color:var(--t0);margin-bottom:6px}
+.feat-d{font-size:12px;color:var(--t2);line-height:1.65}
 
-/* ─── FOOTER CTA ────────────────────────────────────────── */
-#fcta{text-align:center;padding:120px 24px}
-.fcta-h2{
-  font-size:clamp(32px,5vw,62px);font-weight:900;
-  color:var(--tx);line-height:1.08;letter-spacing:-.02em;margin-bottom:22px
+/* ─── FOOTER ─────────────────────────────────── */
+#foot{text-align:center;padding:140px 24px;position:relative;overflow:hidden}
+#foot::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 100%,#8b5cf618 0%,transparent 60%);
+  pointer-events:none
 }
-.fcta-sub{font-size:17px;color:var(--t2);margin-bottom:44px}
 
-/* ─── MODAL SYSTEM ──────────────────────────────────────── */
-.modal-overlay{
-  position:fixed;inset:0;
-  background:rgba(7,7,15,.96);z-index:1000;
-  display:none;align-items:flex-start;
-  justify-content:center;overflow-y:auto;padding:16px
+/* ═══════════════════════════════════════════════
+   MODAL SYSTEM
+═══════════════════════════════════════════════ */
+.overlay{
+  position:fixed;inset:0;background:rgba(8,9,14,.92);
+  backdrop-filter:blur(8px);z-index:1000;
+  display:none;align-items:flex-start;justify-content:center;
+  padding:16px;overflow-y:auto
 }
-.modal-overlay.open{display:flex}
+.overlay.open{display:flex}
 .modal{
-  background:var(--s1);border:1px solid var(--b1);
-  border-radius:22px;width:100%;max-width:960px;
-  margin:auto;overflow:hidden;
-  box-shadow:0 40px 120px rgba(0,0,0,.6)
+  background:var(--ink1);border:1px solid var(--line2);
+  border-radius:var(--rad-lg);width:100%;margin:auto;
+  box-shadow:0 60px 160px rgba(0,0,0,.7);overflow:hidden
 }
-.modal-hd{
+
+/* modal chrome */
+.modal-bar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:18px 26px;background:var(--s2);
-  border-bottom:1px solid var(--b1)
+  padding:13px 20px;background:var(--ink2);border-bottom:1px solid var(--line);
 }
-.modal-hd-title{font-size:13px;font-weight:600;color:var(--tx)}
-.modal-hd-close{
-  background:none;border:none;color:var(--t2);
-  font-size:20px;line-height:1;padding:4px;
-  transition:color .15s
-}
-.modal-hd-close:hover{color:var(--tx)}
+.modal-bar-title{font-size:12px;font-weight:600;color:var(--t1)}
+.modal-close{background:none;border:none;color:var(--t3);font-size:18px;line-height:1;padding:4px;transition:color .15s}
+.modal-close:hover{color:var(--t0)}
 
 /* browser chrome */
 .browser{
   display:flex;align-items:center;gap:10px;
-  background:#08081a;padding:10px 18px;
-  border-bottom:1px solid var(--b1)
+  background:#060810;padding:9px 16px;border-bottom:1px solid var(--line)
 }
-.bdots{display:flex;gap:5px}
-.bd{width:10px;height:10px;border-radius:50%}
-.bd-r{background:#ff5f57}.bd-y{background:#ffbd2e}.bd-g{background:#28c940}
-.burl{
-  flex:1;background:var(--s2);border:1px solid var(--b1);
-  border-radius:6px;padding:4px 12px;
-  font-family:var(--mono);font-size:11px;color:var(--t3)
+.browser-dots{display:flex;gap:5px}
+.bdot{width:9px;height:9px;border-radius:50%}
+.bdot-r{background:#ff5f57}.bdot-y{background:#ffbd2e}.bdot-g{background:#28c940}
+.browser-url{
+  flex:1;background:var(--ink3);border:1px solid var(--line);
+  border-radius:6px;padding:4px 11px;
+  font-family:var(--mono);font-size:10px;color:var(--t3)
 }
 
-/* step nav */
-.step-nav{
-  display:flex;background:var(--s2);
-  border-bottom:1px solid var(--b1);overflow-x:auto
+/* step rail */
+.step-rail{
+  display:flex;background:var(--ink2);border-bottom:1px solid var(--line);
+  overflow-x:auto;scrollbar-width:none
 }
-.snav-item{
-  padding:11px 18px;font-size:11px;font-weight:600;
-  color:var(--t3);border-bottom:2px solid transparent;
-  white-space:nowrap;cursor:default;letter-spacing:.02em;
-  transition:color .2s
+.step-rail::-webkit-scrollbar{display:none}
+.srail-item{
+  padding:10px 16px;font-size:11px;font-weight:500;color:var(--t3);
+  border-bottom:2px solid transparent;white-space:nowrap;
+  letter-spacing:.01em;position:relative;flex-shrink:0
 }
-.snav-item.done{color:var(--gr)}
-.snav-item.active{color:var(--pu);border-bottom-color:var(--pu)}
+.srail-item.done{color:var(--g)}
+.srail-item.done::after{content:'✓';margin-left:5px;font-size:9px}
+.srail-item.active{color:var(--v);border-bottom-color:var(--v)}
 
 /* progress */
-.prog-track{height:2px;background:var(--b1)}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--pu),#a78bfa);transition:width .5s ease}
+.prog{height:1px;background:var(--line)}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--v),#c084fc);transition:width .4s ease}
 
 /* demo screens */
-.demo-body{min-height:500px;position:relative}
-.dscr{display:none;padding:28px 32px;animation:fadeUp .3s ease}
-.dscr.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.dscreen{display:none;animation:fd .25s ease}
+.dscreen.on{display:block}
+@keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* demo controls */
-.demo-ctrl{
+/* demo footer bar */
+.demo-foot{
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 24px;background:var(--s2);border-top:1px solid var(--b1)
+  padding:12px 20px;background:var(--ink2);border-top:1px solid var(--line)
 }
-.ctrl-label{font-size:12px;color:var(--t3)}
-.ctrl-btns{display:flex;gap:8px}
-.cbtn{
-  background:var(--s3);border:1px solid var(--b2);
-  color:var(--t2);padding:7px 16px;border-radius:9px;
-  font-size:12px;font-weight:500;transition:all .15s
-}
-.cbtn:hover{color:var(--tx);border-color:var(--pu)}
-.cbtn.p{background:var(--pu-a);border-color:var(--pu);color:var(--pu)}
-.cbtn.p:hover{background:var(--pu-b)}
-
-/* ─── APP NAV ───────────────────────────────────────────── */
-.app-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:28px
-}
-.app-logo{font-size:17px;font-weight:800;color:var(--tx);letter-spacing:-.01em}
-.app-tagline{font-size:10px;color:var(--t3);margin-top:2px;font-weight:400}
-
-/* ─── UPLOAD PAGE ───────────────────────────────────────── */
-.upload-wrap{max-width:640px;margin:0 auto}
-.upload-h1{font-size:26px;font-weight:800;color:var(--tx);margin-bottom:8px;letter-spacing:-.01em}
-.upload-sub{font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.65}
-.dropzone{
-  border:2px dashed var(--b2);border-radius:18px;
-  padding:52px 40px;text-align:center;
-  transition:all .2s;background:var(--s2)
-}
-.dropzone.drag{border-color:var(--pu);background:var(--pu-a)}
-.dz-icon{font-size:40px;margin-bottom:14px}
-.dz-title{font-size:17px;font-weight:700;color:var(--tx);margin-bottom:6px}
-.dz-sub{font-size:13px;color:var(--t3)}
-.file-chip{
-  display:flex;align-items:center;gap:14px;
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:12px;padding:16px 18px;margin-top:16px
-}
-.file-chip-name{font-size:14px;font-weight:600;color:var(--tx)}
-.file-chip-size{font-size:12px;color:var(--t3);margin-top:2px}
-.upload-btn{
-  width:100%;background:linear-gradient(135deg,var(--pu),var(--pu2));
-  color:#fff;border:none;border-radius:12px;
-  padding:15px;font-size:15px;font-weight:700;
-  margin-top:16px;transition:transform .15s,opacity .15s
-}
-.upload-btn:hover{transform:translateY(-1px)}
-.upload-btn.disabled{background:var(--s3);color:var(--t3);transform:none;cursor:not-allowed}
-
-/* ─── PROCESSING ────────────────────────────────────────── */
-.proc-card{
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:16px;padding:24px;margin-top:20px
-}
-.proc-h{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:4px}
-.proc-sub{font-size:12px;color:var(--t3);margin-bottom:20px}
-.pbar-wrap{background:var(--b1);border-radius:4px;height:5px;overflow:hidden;margin-bottom:6px}
-.pbar-fill{height:100%;background:linear-gradient(90deg,var(--pu),#a78bfa);border-radius:4px}
-.pbar-label{font-size:11px;color:var(--t3);text-align:right}
-.proc-steps{margin-top:20px}
-.proc-step{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--b1)
-}
-.proc-step:last-child{border-bottom:none}
-.proc-ic{
-  width:26px;height:26px;border-radius:50%;
-  flex-shrink:0;display:flex;align-items:center;
-  justify-content:center;font-size:11px;margin-top:1px
-}
-.ic-done{background:var(--gr-a);color:var(--gr)}
-.ic-spin{background:var(--pu-a);color:var(--pu)}
-.ic-wait{background:var(--s3);color:var(--t3);border:1px solid var(--b1)}
-.spin{
-  width:12px;height:12px;border:2px solid var(--pu-a);
-  border-top-color:var(--pu);border-radius:50%;
-  animation:s .7s linear infinite;display:inline-block
-}
-@keyframes s{to{transform:rotate(360deg)}}
-.proc-text{font-size:13px;font-weight:500}
-.proc-text.done{color:var(--gr)}
-.proc-text.active{color:var(--pu)}
-.proc-text.wait{color:var(--t3)}
-.proc-note{font-size:11px;color:var(--t3);margin-top:3px}
-.transcript-box{
-  background:var(--bg);border:1px solid var(--b1);
-  border-radius:10px;padding:14px 16px;margin-top:16px;
-  font-family:var(--mono);font-size:11px;color:var(--t2);
-  line-height:1.8
-}
-
-/* ─── VIDEOS LIST ───────────────────────────────────────── */
-.vids-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
-.vids-h1{font-size:24px;font-weight:800;color:var(--tx);letter-spacing:-.01em}
-.vids-sub{font-size:13px;color:var(--t2);margin-top:4px}
-.btn-upload{
-  background:linear-gradient(135deg,var(--pu),var(--pu2));
-  color:#fff;border:none;border-radius:11px;
-  padding:10px 20px;font-size:13px;font-weight:700;
-  white-space:nowrap
-}
-.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.vid-card{
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:14px;padding:18px;cursor:pointer;
-  transition:border-color .2s,transform .2s
-}
-.vid-card:hover{border-color:var(--b2);transform:translateY(-1px)}
-.vid-badge{
-  display:inline-block;font-size:10px;font-weight:700;
-  padding:3px 9px;border-radius:20px;margin-bottom:10px;letter-spacing:.04em
-}
-.badge-ready{background:var(--gr-a);color:var(--gr)}
-.badge-proc{background:var(--pu-a);color:var(--pu)}
-.vid-name{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:6px;line-height:1.4}
-.vid-meta{font-size:11px;color:var(--t3)}
-.vid-plats{display:flex;gap:4px;margin-top:10px}
-.plat-ic{
-  width:18px;height:18px;border-radius:4px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700
-}
-.yt-ic{background:#ff0000;color:#fff}
-.tk-ic{background:#010101;color:#69C9D0;border:1px solid #333}
-.ig-ic{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff}
-
-/* ─── DASHBOARD ─────────────────────────────────────────── */
-.dash-title{font-size:20px;font-weight:800;color:var(--tx);margin-bottom:4px;letter-spacing:-.01em}
-.dash-meta{font-size:12px;color:var(--t3);margin-bottom:16px}
-.notif-banner{
-  background:#0d1a10;border:1px solid #1a3a22;
-  border-radius:10px;padding:11px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;font-size:12px;color:#aaa
-}
-.notif-close{background:none;border:none;color:var(--t3);font-size:14px}
-
-/* platform row */
-.plat-row{
-  display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap
-}
-.plat-btn{
-  display:flex;align-items:center;gap:7px;
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:10px;padding:8px 14px;
-  font-size:12px;font-weight:600;color:var(--t2);
+.demo-foot-label{font-size:11px;color:var(--t3)}
+.demo-foot-btns{display:flex;gap:8px}
+.dfbtn{
+  background:var(--ink3);border:1px solid var(--line2);color:var(--t2);
+  padding:7px 16px;border-radius:var(--rad-sm);font-size:12px;font-weight:500;
   transition:all .15s
 }
-.plat-btn:hover{border-color:var(--b2);color:var(--tx)}
-.plat-btn.active-plat{border-color:var(--pu);color:var(--pu);background:var(--pu-a)}
-.plat-btn.connected{border-color:var(--gr-b);color:var(--gr);background:var(--gr-a)}
-.plat-btn.queue{border-color:var(--b2);color:var(--t3)}
-.plat-btn .pip{width:6px;height:6px;border-radius:50%}
-.pip-live{background:var(--gr)}
-.pip-queue{background:var(--or)}
-.pip-off{background:var(--t4)}
+.dfbtn:hover{color:var(--t0);border-color:var(--line3)}
+.dfbtn.p{background:var(--va16);border-color:var(--v);color:var(--v)}
+.dfbtn.p:hover{background:var(--va32)}
 
-/* stat grid */
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.stat-card{
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:12px;padding:16px 14px
-}
-.stat-n{font-size:22px;font-weight:800;color:var(--tx);margin-bottom:3px;letter-spacing:-.01em}
-.stat-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em}
-.stat-ch{font-size:11px;color:var(--gr);margin-top:4px}
-.stat-ba{font-size:11px;color:var(--or);margin-top:4px}
+/* ═══════════════════════════════════════════════
+   INNER APP COMPONENTS
+═══════════════════════════════════════════════ */
+.app-wrap{padding:24px 28px;min-height:520px}
 
-/* cross-platform stats */
-.xplat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.xplat-card{
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:12px;padding:14px
-}
-.xplat-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.xplat-title{font-size:12px;font-weight:700;color:var(--tx)}
-.xplat-row{
-  display:flex;justify-content:space-between;
-  font-size:12px;padding:5px 0;
-  border-bottom:1px solid var(--b1)
-}
-.xplat-row:last-child{border-bottom:none}
-.xplat-key{color:var(--t3)}
-.xplat-val{color:var(--tx);font-weight:600}
-
-/* dash tabs */
-.dash-tabs{display:flex;border-bottom:1px solid var(--b1);margin-bottom:20px;gap:0}
-.dtab{
-  padding:10px 16px;font-size:12px;font-weight:600;
-  color:var(--t3);border:none;background:none;
-  border-bottom:2px solid transparent;margin-bottom:-1px;
-  transition:all .15s;white-space:nowrap
-}
-.dtab:hover{color:var(--t2)}
-.dtab.on{color:var(--tx);border-bottom-color:var(--pu)}
-.dtab .cnt{color:var(--or);margin-left:4px}
-
-/* section card */
-.sc{
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:14px;padding:20px;margin-bottom:12px
-}
-.sc-hd{
-  font-size:13px;font-weight:700;color:var(--tx);
-  margin-bottom:14px;display:flex;align-items:center;
-  justify-content:space-between
-}
-.sc-hd span{font-size:11px;color:var(--t3);font-weight:400}
-
-/* title options */
-.title-opt{
-  background:var(--bg);border:1px solid var(--b1);
-  border-radius:10px;padding:14px;margin-bottom:8px;
-  position:relative
-}
-.title-rank{
-  position:absolute;top:12px;right:12px;
-  background:var(--pu-a);color:var(--pu);
-  font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px
-}
-.title-t{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:5px;padding-right:44px;line-height:1.5}
-.title-r{font-size:11px;color:var(--t3);line-height:1.6}
-.copy-btn{
-  background:var(--pu-a);border:none;color:var(--pu);
-  padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;
-  margin-top:8px;transition:background .15s
-}
-.copy-btn:hover{background:var(--pu-b)}
-.tag{
-  display:inline-block;background:var(--s3);border:1px solid var(--b1);
-  color:var(--pu);padding:3px 9px;border-radius:6px;
-  font-size:11px;margin:3px
-}
-
-/* comment inbox */
-.inbox-toolbar{
+/* app header */
+.app-header{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:16px;flex-wrap:wrap;gap:10px
+  margin-bottom:24px
 }
-.inbox-title{font-size:13px;font-weight:700;color:var(--tx)}
-.batch-btn{
-  background:var(--gr-a);border:1px solid var(--gr-b);
-  color:var(--gr);padding:8px 16px;border-radius:9px;
-  font-size:12px;font-weight:700
+.app-logo{
+  font-family:var(--display);font-size:16px;font-weight:800;
+  letter-spacing:-.01em;color:var(--t0)
 }
-.batch-btn:disabled{opacity:.4;cursor:default}
-.com-card{padding:14px 0;border-bottom:1px solid var(--b1)}
-.com-card:last-child{border-bottom:none}
-.com-card.approved{opacity:.35}
-.com-head{font-size:11px;font-weight:600;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.com-text{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:9px}
-.ai-dr{
-  background:#0b1a0e;border:1px solid var(--gr-b);
-  border-radius:8px;padding:10px 12px;
-  font-size:12px;color:var(--gr);line-height:1.65;margin-bottom:9px
-}
-.com-acts{display:flex;gap:7px}
-.btn-app{background:var(--gr-a);border:1px solid var(--gr-b);color:var(--gr);padding:5px 13px;border-radius:7px;font-size:11px;font-weight:600}
-.btn-skip{background:var(--s3);border:1px solid var(--b1);color:var(--t3);padding:5px 13px;border-radius:7px;font-size:11px}
-.btn-app:disabled{opacity:.5;cursor:default}
+.app-logo span{color:var(--v)}
+.app-nav-btns{display:flex;gap:8px}
 
-/* clip card */
-.clip-card{
-  background:#0b0916;border:1px solid #25204a;
-  border-radius:14px;padding:20px;margin-bottom:12px
+/* ─── VIDEO LIST ─────────────────────────────── */
+.page-title{
+  font-family:var(--display);font-size:22px;font-weight:700;
+  color:var(--t0);letter-spacing:-.01em;margin-bottom:4px
 }
-.clip-fire{
-  display:inline-flex;align-items:center;gap:6px;
-  background:#2a100822;color:var(--or);
-  border:1px solid #ff6b3533;
-  padding:4px 11px;border-radius:20px;
-  font-size:11px;font-weight:700;margin-bottom:12px
-}
-.clip-title{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:6px}
-.clip-why{font-size:12px;color:var(--t2);margin-bottom:10px;line-height:1.65}
-.clip-meta{font-size:11px;color:var(--t3);margin-bottom:14px}
-.clip-pkg{
-  background:var(--bg);border:1px solid var(--b1);
-  border-radius:8px;padding:12px 14px;margin-bottom:14px;
-  font-size:12px;color:var(--t2);line-height:1.8
-}
-.clip-pkg strong{color:var(--tx);font-weight:600}
-.clip-comments{margin-bottom:14px}
-.clip-q{font-size:11px;color:var(--t3);font-style:italic;margin-bottom:4px}
-.clip-acts{display:flex;gap:8px;flex-wrap:wrap}
-.btn-sched{background:#16132a;border:1px solid #3a3060;color:var(--pu);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500}
-.btn-dl{background:var(--gr-a);border:1px solid var(--gr-b);color:var(--gr);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500}
-.btn-dis{background:var(--s3);border:1px solid var(--b1);color:var(--t3);padding:7px 14px;border-radius:8px;font-size:12px}
+.page-sub{font-size:12px;color:var(--t2);margin-bottom:22px}
 
-/* deploy panel */
-.deploy-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.deploy-card{
-  background:var(--s2);border:1px solid var(--b1);
-  border-radius:14px;padding:18px;
-  position:relative;overflow:hidden
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.vc{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad);padding:18px;cursor:pointer;
+  transition:border-color .15s,transform .12s
 }
-.deploy-ic{
-  width:36px;height:36px;border-radius:10px;
+.vc:hover{border-color:var(--line3);transform:translateY(-1px)}
+.vc-thumb{
+  height:88px;border-radius:var(--rad-sm);margin-bottom:14px;
+  display:flex;align-items:center;justify-content:center;font-size:28px
+}
+.vc-thumb-gut{background:linear-gradient(135deg,#1a1230,#0d1a14)}
+.vc-thumb-morn{background:linear-gradient(135deg,#1a1208,#0d1214)}
+.vc-thumb-proc{background:var(--ink3);border:1px solid var(--line)}
+.status-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  border-radius:100px;padding:3px 9px;
+  font-size:10px;font-weight:600;margin-bottom:10px
+}
+.sp-live{background:var(--ga);color:var(--g);border:1px solid var(--gb)}
+.sp-proc{background:var(--va8);color:var(--v);border:1px solid var(--va16)}
+.sp-dot{width:5px;height:5px;border-radius:50%}
+.spd-live{background:var(--g)}
+.spd-proc{background:var(--v)}
+.vc-name{font-size:13px;font-weight:600;color:var(--t0);margin-bottom:5px;line-height:1.4}
+.vc-meta{font-size:11px;color:var(--t3);line-height:1.5}
+.vc-plats{display:flex;gap:5px;margin-top:10px;align-items:center}
+.pi{
+  width:18px;height:18px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700
+}
+.pi-yt{background:#ff0000;color:#fff}
+.pi-tk{background:#0a0a0a;color:#69C9D0;border:1px solid #222}
+.pi-ig{background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff}
+.pi-x{background:#e7e7e7;color:#000}
+.pi-pending{background:var(--ink3);border:1px solid var(--line);color:var(--t3);font-size:9px}
+
+/* ─── UPLOAD ─────────────────────────────────── */
+.upload-wrap{max-width:580px;margin:0 auto}
+.dropzone{
+  border:1.5px dashed var(--line3);border-radius:var(--rad-lg);
+  padding:52px 40px;text-align:center;background:var(--ink2);
+  transition:all .2s
+}
+.dropzone.active{border-color:var(--v);background:var(--va8)}
+.dz-icon{font-size:36px;margin-bottom:14px}
+.dz-title{font-size:16px;font-weight:600;color:var(--t0);margin-bottom:6px}
+.dz-sub{font-size:12px;color:var(--t3)}
+.file-pill{
+  display:flex;align-items:center;gap:12px;
+  background:var(--ink3);border:1px solid var(--line2);
+  border-radius:var(--rad);padding:14px 16px;margin-top:14px
+}
+.file-icon{font-size:24px}
+.file-name{font-size:13px;font-weight:600;color:var(--t0)}
+.file-size{font-size:11px;color:var(--t3);margin-top:2px}
+.upload-start-btn{
+  width:100%;background:linear-gradient(135deg,var(--v),var(--v2));
+  color:#fff;border:none;border-radius:var(--rad);
+  padding:14px;font-size:14px;font-weight:600;
+  margin-top:14px;transition:opacity .15s,transform .12s;
+  font-family:var(--display);letter-spacing:.01em
+}
+.upload-start-btn:hover{transform:translateY(-1px)}
+
+/* ─── PROCESSING ─────────────────────────────── */
+.proc-card{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:26px
+}
+.proc-head{font-size:15px;font-weight:600;color:var(--t0);margin-bottom:4px;font-family:var(--display)}
+.proc-sub{font-size:12px;color:var(--t3);margin-bottom:22px}
+.pbar{background:var(--ink4);border-radius:4px;height:4px;overflow:hidden}
+.pbar-inner{height:100%;background:linear-gradient(90deg,var(--v),#c084fc);border-radius:4px;transition:width .4s}
+.pbar-label{font-size:10px;color:var(--t3);text-align:right;margin-top:5px;font-family:var(--mono)}
+.proc-list{margin-top:22px;display:flex;flex-direction:column;gap:0}
+.prow{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:13px 0;border-bottom:1px solid var(--line)
+}
+.prow:last-child{border-bottom:none}
+.prow-ic{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:1px
+}
+.ic-done{background:var(--ga);color:var(--g);border:1px solid var(--gb)}
+.ic-active{background:var(--va8);color:var(--v);border:1px solid var(--va16)}
+.ic-wait{background:var(--ink3);color:var(--t3);border:1px solid var(--line)}
+.spinner{width:11px;height:11px;border:1.5px solid var(--va16);border-top-color:var(--v);border-radius:50%;animation:spin .65s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prow-title{font-size:13px;font-weight:500}
+.prow-title.done{color:var(--g)}
+.prow-title.active{color:var(--v)}
+.prow-title.wait{color:var(--t3)}
+.prow-note{font-size:11px;color:var(--t3);margin-top:2px}
+.transcript-live{
+  background:var(--ink);border:1px solid var(--line);
+  border-radius:var(--rad-sm);padding:14px;margin-top:16px;
+  font-family:var(--mono);font-size:10px;color:var(--t2);line-height:1.9
+}
+.tl-label{font-size:9px;font-weight:600;color:var(--v);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+
+/* ─── READY ──────────────────────────────────── */
+.ready-wrap{text-align:center;padding:48px 32px}
+.ready-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--ga);border:2px solid var(--g);
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;margin-bottom:12px
+  font-size:26px;margin:0 auto 20px
 }
-.deploy-name{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px}
-.deploy-desc{font-size:12px;color:var(--t3);margin-bottom:14px;line-height:1.6}
-.deploy-status{font-size:11px;font-weight:600;margin-bottom:12px}
-.ds-live{color:var(--gr)}
-.ds-sched{color:var(--or)}
-.ds-ready{color:var(--pu)}
-.deploy-btn{
-  width:100%;padding:9px;border-radius:9px;
-  font-size:12px;font-weight:600;
-  border:none;transition:opacity .15s
+.ready-title{font-family:var(--display);font-size:22px;font-weight:700;color:var(--g);margin-bottom:8px}
+.ready-sub{font-size:14px;color:var(--t2);margin-bottom:32px}
+.ready-stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
+.rstat{
+  background:var(--ink2);border:1px solid var(--line);border-radius:var(--rad);
+  padding:14px 20px;text-align:left;min-width:110px
 }
-.db-pub{background:linear-gradient(135deg,var(--pu),var(--pu2));color:#fff}
-.db-sched{background:var(--pu-a);border:1px solid var(--pu);color:var(--pu)}
-.db-dl{background:var(--gr-a);border:1px solid var(--gr-b);color:var(--gr)}
-.db-v2{background:var(--s3);border:1px solid var(--b2);color:var(--t3);cursor:not-allowed;opacity:.6}
-.v2-chip{
-  position:absolute;top:14px;right:14px;
-  background:#ff6b3520;border:1px solid #ff6b3540;
-  color:var(--or);font-size:9px;font-weight:700;
-  padding:2px 7px;border-radius:8px;letter-spacing:.04em
-}
-.v1-chip{
-  position:absolute;top:14px;right:14px;
-  background:var(--gr-a);border:1px solid var(--gr-b);
-  color:var(--gr);font-size:9px;font-weight:700;
-  padding:2px 7px;border-radius:8px
-}
+.rstat-n{font-family:var(--display);font-size:24px;font-weight:800;color:var(--t0);margin-bottom:3px}
+.rstat-l{font-size:10px;color:var(--t3);letter-spacing:.04em}
 
-/* alerts */
-.alert-form{
-  display:flex;gap:8px;flex-wrap:wrap;margin-top:14px
-}
-.alert-sel{
-  background:var(--bg);border:1px solid var(--b2);
-  color:var(--tx);padding:8px 12px;border-radius:8px;font-size:12px
-}
-.alert-inp{
-  background:var(--bg);border:1px solid var(--b2);
-  color:var(--tx);padding:8px 12px;border-radius:8px;font-size:12px;width:110px
-}
-.alert-add{background:var(--pu-a);border:1px solid var(--pu);color:var(--pu);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600}
-.alert-row-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:11px 0;border-bottom:1px solid var(--b1);font-size:12px;color:var(--t2)
-}
-.alert-row-item:last-of-type{border-bottom:none}
-.alert-trig{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
-.at-active{background:var(--gr-a);color:var(--gr)}
-.at-fired{background:var(--or-a);color:var(--or)}
-.alert-del{background:none;border:none;color:var(--t3);font-size:16px}
+/* ─── DASHBOARD ──────────────────────────────── */
 
-/* shorts preview */
-.shorts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
-.short-card{
-  background:var(--bg);border:1px solid var(--b1);
-  border-radius:10px;overflow:hidden
+/* breadcrumb */
+.breadcrumb{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;color:var(--t3);margin-bottom:20px
 }
-.short-thumb{
-  height:110px;
-  background:linear-gradient(135deg,#1a1a35,#2a2050);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px
-}
-.short-body{padding:10px}
-.short-ts{font-size:10px;color:var(--pu);font-weight:700;margin-bottom:4px;font-family:var(--mono)}
-.short-title{font-size:12px;font-weight:600;color:var(--tx);line-height:1.4;margin-bottom:4px}
-.short-why{font-size:10px;color:var(--t3);line-height:1.5}
+.breadcrumb a{color:var(--t3);text-decoration:none}
+.breadcrumb a:hover{color:var(--t1)}
+.bc-sep{color:var(--t3)}
 
-/* full demo modal */
-#fdemo{max-width:1020px}
-.plat-tabs{
-  display:flex;background:var(--s2);
-  border-bottom:1px solid var(--b1);overflow-x:auto
+/* video hero bar */
+.vid-hero{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:20px 22px;margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap
 }
-.ptab{
-  padding:13px 20px;font-size:12px;font-weight:600;
-  color:var(--t3);border:none;background:none;
+.vh-info{flex:1;min-width:0}
+.vh-title{font-family:var(--display);font-size:17px;font-weight:700;color:var(--t0);margin-bottom:4px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vh-meta{font-size:11px;color:var(--t3)}
+.vh-platforms{display:flex;gap:6px;flex-wrap:wrap}
+.plat-tag{
+  display:flex;align-items:center;gap:6px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:100px;padding:5px 11px;
+  font-size:11px;font-weight:500;color:var(--t2);cursor:pointer;
+  transition:border-color .15s
+}
+.plat-tag:hover{border-color:var(--line3)}
+.plat-tag.live{border-color:var(--gb);color:var(--g);background:var(--ga)}
+.plat-tag.sched{border-color:#f59e0b30;color:var(--a);background:var(--aa)}
+.pt-dot{width:5px;height:5px;border-radius:50%}
+.ptd-live{background:var(--g)}
+.ptd-sched{background:var(--a)}
+.ptd-off{background:var(--t3)}
+
+/* alert banner */
+.alert-bar{
+  background:#0e0a1a;border:1px solid var(--va16);border-radius:var(--rad);
+  padding:10px 16px;display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--t1);margin-bottom:14px;gap:12px
+}
+.alert-bar-close{background:none;border:none;color:var(--t3);font-size:16px;flex-shrink:0}
+
+/* stat row — total across all platforms */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.stat{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad);padding:14px 16px
+}
+.stat-n{font-family:var(--display);font-size:22px;font-weight:800;color:var(--t0);margin-bottom:3px;letter-spacing:-.01em}
+.stat-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em}
+.stat-d{font-size:11px;color:var(--g);margin-top:4px}
+.stat-d.neg{color:var(--a)}
+
+/* platform breakdown */
+.xplat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.xp{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad);padding:14px 14px 10px
+}
+.xp-head{display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.xp-name{font-size:13px;font-weight:600;color:var(--t0)}
+.xp-sub{font-size:10px;color:var(--t3)}
+.xp-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid var(--line);font-size:12px
+}
+.xp-row:last-child{border-bottom:none}
+.xp-k{color:var(--t2)}
+.xp-v{color:var(--t0);font-weight:500}
+.xp-v.hi{color:var(--g)}
+
+/* tabs */
+.tabs{
+  display:flex;border-bottom:1px solid var(--line);
+  margin-bottom:16px;gap:0;overflow-x:auto;scrollbar-width:none
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:10px 16px;font-size:12px;font-weight:500;
+  color:var(--t3);background:none;border:none;
   border-bottom:2px solid transparent;margin-bottom:-1px;
   white-space:nowrap;transition:all .15s
 }
-.ptab:hover{color:var(--t2)}
-.ptab.on{color:var(--tx);border-bottom-color:var(--pu)}
-.ppanel{display:none;padding:28px 32px;animation:fadeUp .25s ease}
-.ppanel.on{display:block}
+.tab:hover{color:var(--t1)}
+.tab.on{color:var(--t0);border-bottom-color:var(--v)}
+.tab-badge{
+  display:inline-block;background:var(--aa);color:var(--a);
+  border-radius:100px;padding:1px 6px;font-size:9px;font-weight:600;
+  margin-left:5px
+}
+.tab-badge.fire{background:var(--va8);color:var(--v)}
 
-/* scrollbar */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+/* section card */
+.sc{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:18px 20px;margin-bottom:10px
+}
+.sc-head{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;font-weight:600;color:var(--t0);margin-bottom:16px
+}
+.sc-head-meta{font-size:11px;color:var(--t3);font-weight:400}
+
+/* title options */
+.title-opt{
+  background:var(--ink);border:1px solid var(--line);
+  border-radius:var(--rad);padding:14px 16px;margin-bottom:8px;
+  position:relative
+}
+.title-opt:last-child{margin-bottom:0}
+.to-rank{
+  position:absolute;top:12px;right:12px;
+  font-size:9px;font-weight:700;background:var(--va8);color:var(--v);
+  border:1px solid var(--va16);padding:2px 8px;border-radius:100px;font-family:var(--mono)
+}
+.to-text{font-size:13px;font-weight:500;color:var(--t0);margin-bottom:5px;padding-right:50px;line-height:1.5}
+.to-reason{font-size:11px;color:var(--t3);line-height:1.6}
+.to-actions{display:flex;gap:7px;margin-top:10px}
+.btn-copy{
+  background:none;border:1px solid var(--line2);color:var(--t2);
+  padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;
+  transition:all .15s
+}
+.btn-copy:hover{border-color:var(--v);color:var(--v)}
+.btn-use{
+  background:var(--va8);border:1px solid var(--va16);color:var(--v);
+  padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;
+  transition:background .15s
+}
+.btn-use:hover{background:var(--va16)}
+
+/* tags */
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tag{
+  background:var(--ink3);border:1px solid var(--line);color:var(--v);
+  padding:4px 10px;border-radius:6px;font-size:11px
+}
+
+/* ─── DEPLOY PANEL ───────────────────────────── */
+.deploy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.dcard{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:18px;position:relative;overflow:hidden
+}
+.dcard-ic{
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;margin-bottom:12px
+}
+.dcard-name{font-size:13px;font-weight:600;color:var(--t0);margin-bottom:4px;font-family:var(--display)}
+.dcard-desc{font-size:12px;color:var(--t2);line-height:1.65;margin-bottom:12px}
+.dcard-status{font-size:11px;font-weight:600;margin-bottom:12px}
+.dcs-live{color:var(--g)}
+.dcs-sched{color:var(--a)}
+.dcs-ready{color:var(--v)}
+.dcard-btn{
+  width:100%;padding:9px;border-radius:var(--rad-sm);
+  font-size:12px;font-weight:600;border:none;
+  transition:opacity .15s,transform .12s
+}
+.dcard-btn:hover:not(:disabled){transform:translateY(-1px)}
+.db-primary{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff}
+.db-outline{background:var(--va8);border:1px solid var(--va16)!important;color:var(--v)}
+.db-green{background:var(--ga);border:1px solid var(--gb)!important;color:var(--g)}
+.db-disabled{background:var(--ink3);color:var(--t3);cursor:not-allowed}
+.dcard-chip{
+  position:absolute;top:12px;right:12px;
+  font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:.04em
+}
+.chip-live{background:var(--ga);color:var(--g);border:1px solid var(--gb)}
+.chip-ready{background:var(--va8);color:var(--v);border:1px solid var(--va16)}
+.chip-v2{background:#f59e0b14;color:var(--a);border:1px solid #f59e0b30}
+
+/* ─── COMMENTS ───────────────────────────────── */
+.inbox-header{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;margin-bottom:14px
+}
+.inbox-title{font-size:13px;font-weight:600;color:var(--t0)}
+.inbox-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.batch-approve-btn{
+  background:var(--ga);border:1px solid var(--gb);color:var(--g);
+  padding:8px 16px;border-radius:var(--rad-sm);font-size:12px;font-weight:600
+}
+.batch-approve-btn:disabled{opacity:.4;cursor:default}
+.com{
+  padding:14px 0;border-bottom:1px solid var(--line);
+  transition:opacity .3s
+}
+.com:last-child{border-bottom:none}
+.com.done{opacity:.35}
+.com-header{
+  display:flex;align-items:center;gap:7px;
+  font-size:11px;color:var(--t2);margin-bottom:7px
+}
+.com-text{font-size:13px;color:var(--t1);line-height:1.65;margin-bottom:9px}
+.ai-reply{
+  background:#0a160d;border:1px solid var(--gb);border-radius:var(--rad-sm);
+  padding:10px 12px;font-size:12px;color:var(--g);line-height:1.7;margin-bottom:9px
+}
+.ai-reply-label{font-size:9px;font-weight:600;color:var(--g);letter-spacing:.06em;margin-bottom:4px;opacity:.7}
+.com-acts{display:flex;gap:7px}
+.btn-approve{
+  background:var(--ga);border:1px solid var(--gb);color:var(--g);
+  padding:5px 13px;border-radius:6px;font-size:11px;font-weight:600
+}
+.btn-approve:disabled{opacity:.5;cursor:default}
+.btn-skip-com{
+  background:var(--ink3);border:1px solid var(--line);color:var(--t2);
+  padding:5px 13px;border-radius:6px;font-size:11px
+}
+.more-indicator{text-align:center;padding:12px;font-size:11px;color:var(--t3)}
+
+/* ─── CLIPS ──────────────────────────────────── */
+.clip-card{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:20px;margin-bottom:10px
+}
+.clip-signal{
+  display:inline-flex;align-items:center;gap:6px;
+  border-radius:100px;padding:4px 12px;font-size:11px;font-weight:600;
+  margin-bottom:14px
+}
+.cs-hot{background:#f59e0b14;border:1px solid #f59e0b30;color:var(--a)}
+.cs-sched{background:var(--va8);border:1px solid var(--va16);color:var(--v)}
+.clip-title{font-family:var(--display);font-size:16px;font-weight:700;color:var(--t0);margin-bottom:6px}
+.clip-why{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:10px}
+.clip-ts{font-family:var(--mono);font-size:11px;color:var(--t3);margin-bottom:14px}
+.clip-pkg{
+  background:var(--ink);border:1px solid var(--line);
+  border-radius:var(--rad-sm);padding:12px 14px;margin-bottom:14px
+}
+.cpkg-row{display:flex;gap:8px;font-size:12px;padding:4px 0;line-height:1.5}
+.cpkg-k{color:var(--t3);flex-shrink:0;width:70px}
+.cpkg-v{color:var(--t1)}
+.cpkg-tags{color:var(--v)}
+.clip-triggers{margin-bottom:14px}
+.ct-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;font-family:var(--mono)}
+.ct-q{
+  font-size:12px;color:var(--t2);padding:7px 0;
+  border-bottom:1px solid var(--line);font-style:italic;line-height:1.6
+}
+.ct-q:last-child{border-bottom:none}
+.clip-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-sched-clip{background:#12103a;border:1px solid var(--va16);color:var(--v);padding:8px 16px;border-radius:var(--rad-sm);font-size:12px;font-weight:500}
+.btn-dl-clip{background:var(--ga);border:1px solid var(--gb);color:var(--g);padding:8px 16px;border-radius:var(--rad-sm);font-size:12px;font-weight:500}
+.btn-dismiss{background:var(--ink3);border:1px solid var(--line);color:var(--t2);padding:8px 16px;border-radius:var(--rad-sm);font-size:12px}
+
+/* ─── ALERTS ─────────────────────────────────── */
+.alert-list{margin-bottom:16px}
+.alert-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--t1)
+}
+.alert-item:last-child{border-bottom:none}
+.at{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px}
+.at-on{background:var(--ga);color:var(--g);border:1px solid var(--gb)}
+.at-fired{background:var(--aa);color:var(--a);border:1px solid #f59e0b30}
+.alert-add-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.a-sel,.a-inp{
+  background:var(--ink);border:1px solid var(--line2);color:var(--t0);
+  padding:8px 12px;border-radius:var(--rad-sm);font-size:12px
+}
+.a-inp{width:100px}
+.a-add-btn{
+  background:var(--va16);border:1px solid var(--va32);color:var(--v);
+  padding:8px 14px;border-radius:var(--rad-sm);font-size:12px;font-weight:600
+}
+
+/* ─── FULL DEMO MODAL ────────────────────────── */
+.ftabs{
+  display:flex;background:var(--ink2);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none
+}
+.ftabs::-webkit-scrollbar{display:none}
+.ftab{
+  padding:12px 18px;font-size:12px;font-weight:500;
+  color:var(--t3);background:none;border:none;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  white-space:nowrap;transition:all .15s
+}
+.ftab:hover{color:var(--t1)}
+.ftab.on{color:var(--t0);border-bottom-color:var(--v)}
+.fpanel{display:none;animation:fd .2s ease}
+.fpanel.on{display:block}
+.fpanel-wrap{padding:24px 28px}
+
+/* roadmap */
+.road-section{background:var(--ink2);border:1px solid var(--line);border-radius:var(--rad-lg);padding:20px;margin-bottom:10px}
+.road-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;font-family:var(--mono)}
+.road-label.live{color:var(--g)}
+.road-label.next{color:var(--v)}
+.road-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.road-item{
+  background:var(--ink2);padding:10px 14px;
+  display:flex;align-items:center;gap:10px;font-size:12px;color:var(--t1)
+}
+.ri-check{color:var(--g);font-weight:700;font-size:11px}
+.ri-v2{font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px;background:var(--aa);color:var(--a);border:1px solid #f59e0b30;flex-shrink:0}
+
+/* ─── MISC UTILS ─────────────────────────────── */
+.divider{height:1px;background:var(--line);margin:16px 0}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.flex-gap{display:flex;align-items:center;gap:8px}
+.mt4{margin-top:4px}
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.text-xs{font-size:11px;color:var(--t3)}
+
+/* ─── LANDING SECTION overrides ──────────────── */
+.section-wrap{max-width:1100px;margin:0 auto}
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════
-     LANDING
-════════════════════════════════════════════ -->
+<!-- ════════════ LANDING ════════════ -->
 <section id="land">
-  <div class="land-chip"><span class="dot"></span>AI-powered creator workflow</div>
+  <div class="land-glow"></div>
+  <div class="land-glow2"></div>
 
-  <h1 class="land-h1">
-    One video.<br>
-    <span>Every platform.</span><br>
-    Zero busywork.
+  <div class="eyebrow"><span class="eyebrow-dot"></span>AI-powered creator workflow</div>
+
+  <h1 class="land-h">
+    One video.<br><em>Every platform.</em><br>One dashboard.
   </h1>
 
   <p class="land-sub">
-    Upload your video once. CreatorOS handles transcription, writes your upload package, deploys across YouTube, TikTok and Instagram, monitors performance, detects clip opportunities from comments, and drafts every reply. You just approve.
+    Upload once. CreatorOS writes your upload package, deploys to every social, monitors traction, and turns your best moments into Shorts — all in one place per video.
   </p>
 
   <div class="cta-row">
-    <button class="btn-hero" onclick="startDemo()">▶ Start demo</button>
-    <button class="btn-ghost" onclick="openFull()">Full version demo →</button>
+    <button class="btn-primary" onclick="startDemo()">▶&ensp;Walk through the demo</button>
+    <button class="btn-outline" onclick="openFull()">Full platform overview</button>
   </div>
 
-  <div class="platform-strip">
-    <div class="plat-pill"><span class="plat-dot yt-c"></span> YouTube</div>
-    <div class="plat-pill"><span class="plat-dot tk-c"></span> TikTok</div>
-    <div class="plat-pill"><span class="plat-dot ig-c"></span> Instagram</div>
-    <div class="plat-pill"><span class="plat-dot x-c"></span> X / Twitter</div>
-    <div class="plat-pill" style="opacity:.4">+ more coming</div>
+  <div class="plat-strip">
+    <div class="plat-item"><span class="pdot pd-yt"></span>YouTube</div>
+    <div class="plat-item"><span class="pdot pd-tk"></span>TikTok</div>
+    <div class="plat-item"><span class="pdot pd-ig"></span>Instagram</div>
+    <div class="plat-item"><span class="pdot pd-x"></span>X / Twitter</div>
+    <div class="plat-item" style="color:var(--t3)">+ more soon</div>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════
-     HOW IT WORKS
-════════════════════════════════════════════ -->
+<!-- ════════════ HOW IT WORKS ════════════ -->
 <section id="hiw">
-  <div class="section-label">The workflow</div>
-  <h2 class="section-h2">Upload once.<br>We handle everything after.</h2>
-  <p class="section-sub">One pipeline from raw file to published everywhere — with AI working in the background as your video grows.</p>
+  <div class="section-wrap">
+    <div class="section-tag">// the workflow</div>
+    <h2 class="section-h">Upload once.<br>Watch it go everywhere.</h2>
+    <p class="section-sub">Six steps from raw file to deployed everywhere — then the system keeps working while you sleep.</p>
 
-  <div class="flow-grid">
-    <div class="flow-cell">
-      <div class="flow-num">STEP 01</div>
-      <div class="flow-title">Upload your file</div>
-      <div class="flow-desc">Drop an MP4, MOV, MP3 or M4A. We extract audio, run Whisper transcription, and show you the transcript live as it builds.</div>
-    </div>
-    <div class="flow-cell">
-      <div class="flow-num">STEP 02</div>
-      <div class="flow-title">We research your niche</div>
-      <div class="flow-desc">YouTube API pulls the top 30 videos in your space. Claude analyzes what's winning — views-per-sub, engagement ratios, hook structures.</div>
-    </div>
-    <div class="flow-cell">
-      <div class="flow-num">STEP 03</div>
-      <div class="flow-title">Upload package generated</div>
-      <div class="flow-desc">5 data-backed title options, full SEO description, 30 tags, auto-chapters, and an .srt captions file — all copy-pasteable and downloadable.</div>
-    </div>
-    <div class="flow-cell">
-      <div class="flow-num">STEP 04</div>
-      <div class="flow-title">Deploy to every platform</div>
-      <div class="flow-desc">Push your video to YouTube, then schedule TikTok clips and Instagram Reels from the same dashboard. One video, everywhere.</div>
-    </div>
-    <div class="flow-cell">
-      <div class="flow-num">STEP 05</div>
-      <div class="flow-title">Monitor across all socials</div>
-      <div class="flow-desc">See views, likes, comments and engagement from YouTube, TikTok and Instagram in one unified analytics panel — per video.</div>
-    </div>
-    <div class="flow-cell">
-      <div class="flow-num">STEP 06</div>
-      <div class="flow-title">Clips detected as it grows</div>
-      <div class="flow-desc">As comments come in and reference specific moments, we detect clip opportunities and generate a full Shorts/Reels package ready to approve.</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="fstep-num">upload</div>
+        <div class="fstep-icon">🎬</div>
+        <div class="fstep-t">Drop your file</div>
+        <div class="fstep-d">MP4, MOV, MP3 or M4A. We extract audio, run Whisper, and stream the transcript live as it builds.</div>
+      </div>
+      <div class="flow-step">
+        <div class="fstep-num">research</div>
+        <div class="fstep-icon">🔍</div>
+        <div class="fstep-t">Niche analysis</div>
+        <div class="fstep-d">YouTube API pulls the top 30 videos in your space. Claude reads what's winning — hook structure, engagement ratio, title patterns.</div>
+      </div>
+      <div class="flow-step">
+        <div class="fstep-num">package</div>
+        <div class="fstep-icon">📦</div>
+        <div class="fstep-t">Upload package</div>
+        <div class="fstep-d">5 data-backed titles, SEO description, 30 tags, auto-chapters, and an .srt captions file. Everything ready to paste.</div>
+      </div>
+      <div class="flow-step">
+        <div class="fstep-num">deploy</div>
+        <div class="fstep-icon">🚀</div>
+        <div class="fstep-t">Push to every platform</div>
+        <div class="fstep-d">Publish to YouTube and generate clip packages for TikTok and Instagram — all from the same screen, same video.</div>
+      </div>
+      <div class="flow-step">
+        <div class="fstep-num">monitor</div>
+        <div class="fstep-icon">📊</div>
+        <div class="fstep-t">Unified analytics</div>
+        <div class="fstep-d">Views, likes, shares, followers gained — all platforms in one dashboard. One video, one place to check.</div>
+      </div>
+      <div class="flow-step">
+        <div class="fstep-num">clips</div>
+        <div class="fstep-icon">✂️</div>
+        <div class="fstep-t">Clips from traction</div>
+        <div class="fstep-d">As comments flood in referencing specific moments, we detect them and build a full Shorts/Reels package — ready for your approval.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════
-     FEATURES
-════════════════════════════════════════════ -->
+<!-- ════════════ FEATURES ════════════ -->
 <section id="feats">
-  <div class="feats-inner">
-    <div class="section-label">What's included</div>
-    <h2 class="section-h2">The complete creator stack</h2>
+  <div class="section-wrap">
+    <div class="section-tag">// what's included</div>
+    <h2 class="section-h">Everything in one place.</h2>
     <div class="feat-grid">
-      <div class="feat-card"><div class="feat-ic">🎙</div><div class="feat-t">Live transcription</div><div class="feat-d">Whisper API with real-time preview. You watch the transcript build as the file processes.</div></div>
-      <div class="feat-card"><div class="feat-ic">🔍</div><div class="feat-t">Niche research</div><div class="feat-d">Top 30 competing videos analyzed for what's winning — titles, hooks, engagement patterns.</div></div>
-      <div class="feat-card"><div class="feat-ic">📦</div><div class="feat-t">Upload package</div><div class="feat-d">5 titles with reasoning, SEO description, 30 tags, chapters and captions .srt in one place.</div></div>
-      <div class="feat-card"><div class="feat-ic">🚀</div><div class="feat-t">Cross-platform deploy</div><div class="feat-d">Publish to YouTube, push clips to TikTok and Instagram from one dashboard.</div></div>
-      <div class="feat-card"><div class="feat-ic">📊</div><div class="feat-t">Unified analytics</div><div class="feat-d">Views, likes, comments and engagement across all platforms in a single panel per video.</div></div>
-      <div class="feat-card"><div class="feat-ic">💬</div><div class="feat-t">Comment inbox + AI replies</div><div class="feat-d">Claude drafts replies for every comment. Approve all at once or review one by one.</div></div>
-      <div class="feat-card"><div class="feat-ic">🔥</div><div class="feat-t">Clip intelligence</div><div class="feat-d">When 5+ comments reference the same moment, we detect it and build the full Shorts package automatically.</div></div>
-      <div class="feat-card"><div class="feat-ic">🔔</div><div class="feat-t">Alert system</div><div class="feat-d">Set view thresholds, engagement drops and comment spikes — get notified the moment they trigger.</div></div>
+      <div class="feat"><div class="feat-icon">🎙</div><div class="feat-t">Live transcription</div><div class="feat-d">Whisper API with real-time preview. Watch the words appear as the file processes.</div></div>
+      <div class="feat"><div class="feat-icon">🔍</div><div class="feat-t">Niche research</div><div class="feat-d">Top 30 competing videos analyzed for what's ranking — titles, hooks, engagement benchmarks.</div></div>
+      <div class="feat"><div class="feat-icon">📦</div><div class="feat-t">Upload package</div><div class="feat-d">5 AI titles with reasoning, full description, 30 tags, chapters and captions.</div></div>
+      <div class="feat"><div class="feat-icon">🚀</div><div class="feat-t">Cross-platform deploy</div><div class="feat-d">YouTube publish + TikTok and Instagram clip packages from one place.</div></div>
+      <div class="feat"><div class="feat-icon">📊</div><div class="feat-t">Unified analytics</div><div class="feat-d">All platform numbers per video in a single, clean panel. No tab-hopping.</div></div>
+      <div class="feat"><div class="feat-icon">💬</div><div class="feat-t">AI comment replies</div><div class="feat-d">Claude drafts a reply to every comment across every platform. Approve all in one click.</div></div>
+      <div class="feat"><div class="feat-icon">🔥</div><div class="feat-t">Clip detection</div><div class="feat-d">When comments cluster around a moment, we build the full Shorts package automatically.</div></div>
+      <div class="feat"><div class="feat-icon">🔔</div><div class="feat-t">Performance alerts</div><div class="feat-d">Set thresholds — views, engagement, comment spikes. We ping you the moment they fire.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════
-     FOOTER CTA
-════════════════════════════════════════════ -->
-<section id="fcta">
-  <h2 class="fcta-h2">You filmed it.<br>We'll handle the rest.</h2>
-  <p class="fcta-sub">The full demo runs through the entire flow in under 10 minutes.</p>
+<!-- ════════════ FOOTER CTA ════════════ -->
+<section id="foot">
+  <h2 class="section-h" style="max-width:600px;margin:0 auto 20px">You filmed it. We handle the rest.</h2>
+  <p class="section-sub" style="margin:0 auto 44px;text-align:center">The demo walks through the full flow. Under 5 minutes.</p>
   <div class="cta-row">
-    <button class="btn-hero" onclick="startDemo()">▶ Start demo</button>
-    <button class="btn-ghost" onclick="openFull()">Full version demo</button>
+    <button class="btn-primary" onclick="startDemo()">▶&ensp;Start demo</button>
+    <button class="btn-outline" onclick="openFull()">Platform overview</button>
   </div>
 </section>
 
 
 <!-- ════════════════════════════════════════════
-     QUICK DEMO MODAL
+     QUICK WALKTHROUGH MODAL
 ════════════════════════════════════════════ -->
-<div class="modal-overlay" id="qmo" onclick="qmoClick(event)">
- <div class="modal">
+<div class="overlay" id="qoverlay" onclick="qovClick(event)">
+<div class="modal" style="max-width:940px">
 
-  <div class="modal-hd">
-   <span class="modal-hd-title" id="qtitle">CreatorOS — Demo</span>
-   <button class="modal-hd-close" onclick="closeDemo()">✕</button>
+  <div class="modal-bar">
+    <span class="modal-bar-title" id="q-title">CreatorOS</span>
+    <button class="modal-close" onclick="closeDemo()">✕</button>
   </div>
 
-  <!-- Step nav -->
-  <div class="step-nav">
-   <div class="snav-item" id="sn0">① Home</div>
-   <div class="snav-item" id="sn1">② Upload</div>
-   <div class="snav-item" id="sn2">③ Processing</div>
-   <div class="snav-item" id="sn3">④ Package ready</div>
-   <div class="snav-item" id="sn4">⑤ Dashboard</div>
-   <div class="snav-item" id="sn5">⑥ Deploy</div>
-   <div class="snav-item" id="sn6">⑦ Comments</div>
-   <div class="snav-item" id="sn7">⑧ Clips</div>
+  <div class="step-rail">
+    <div class="srail-item" id="sn0">Videos</div>
+    <div class="srail-item" id="sn1">Upload</div>
+    <div class="srail-item" id="sn2">Processing</div>
+    <div class="srail-item" id="sn3">Ready</div>
+    <div class="srail-item" id="sn4">Dashboard</div>
+    <div class="srail-item" id="sn5">Deploy</div>
+    <div class="srail-item" id="sn6">Comments</div>
+    <div class="srail-item" id="sn7">Clips</div>
+    <div class="srail-item" id="sn8">Alerts</div>
   </div>
 
-  <div class="prog-track"><div class="prog-fill" id="qprog"></div></div>
+  <div class="prog"><div class="prog-fill" id="q-prog"></div></div>
 
-  <!-- browser -->
   <div class="browser">
-   <div class="bdots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div>
-   <div class="burl" id="qurl">localhost:5173/</div>
+    <div class="browser-dots"><div class="bdot bdot-r"></div><div class="bdot bdot-y"></div><div class="bdot bdot-g"></div></div>
+    <div class="browser-url" id="q-url">app.creatoros.io</div>
   </div>
 
-  <div class="demo-body">
-
-   <!-- S0: Videos home -->
-   <div class="dscr active" id="s0">
-    <div class="app-nav">
-     <div><div class="app-logo">CreatorOS</div><div class="app-tagline">while you sleep, we handle the busywork</div></div>
-     <button class="btn-upload" onclick="goS(1)">+ Upload video</button>
-    </div>
-    <div class="vids-header">
-     <div>
-      <div class="vids-h1">Your videos</div>
-      <div class="vids-sub">3 videos · 2 fully deployed · 1 processing</div>
-     </div>
-    </div>
-    <div class="vid-grid">
-     <div class="vid-card" onclick="goS(4)">
-      <div class="vid-badge badge-ready">LIVE</div>
-      <div class="vid-name">gut_health_deep_dive.mp4</div>
-      <div class="vid-meta">Gut health · June 12 · 24.8K views across platforms</div>
-      <div class="vid-plats">
-       <div class="plat-ic yt-ic">▶</div>
-       <div class="plat-ic tk-ic">♪</div>
-       <div class="plat-ic ig-ic">📸</div>
+  <!-- ── S0: Video home ── -->
+  <div class="dscreen on" id="s0">
+    <div class="app-wrap">
+      <div class="app-header">
+        <div class="app-logo">Creator<span>OS</span></div>
+        <button class="btn-primary" style="padding:9px 20px;font-size:13px" onclick="goS(1)">+ Upload video</button>
       </div>
-     </div>
-     <div class="vid-card">
-      <div class="vid-badge badge-ready">LIVE</div>
-      <div class="vid-name">morning_routine_2025.mp4</div>
-      <div class="vid-meta">Health & Wellness · June 8 · 11.2K views</div>
-      <div class="vid-plats">
-       <div class="plat-ic yt-ic">▶</div>
-       <div class="plat-ic tk-ic">♪</div>
+      <div class="page-title">Your videos</div>
+      <div class="page-sub">3 videos · 2 live · 1 processing</div>
+      <div class="video-grid">
+        <div class="vc" onclick="goS(4)">
+          <div class="vc-thumb vc-thumb-gut">🦠</div>
+          <div class="status-pill sp-live"><span class="sp-dot spd-live"></span>Live on 3 platforms</div>
+          <div class="vc-name">gut_health_deep_dive.mp4</div>
+          <div class="vc-meta">June 12 · 144.9K total views</div>
+          <div class="vc-plats">
+            <div class="pi pi-yt">▶</div><div class="pi pi-tk">♪</div><div class="pi pi-ig">📸</div>
+          </div>
+        </div>
+        <div class="vc">
+          <div class="vc-thumb vc-thumb-morn">🌅</div>
+          <div class="status-pill sp-live"><span class="sp-dot spd-live"></span>Live on 2 platforms</div>
+          <div class="vc-name">morning_routine_2025.mp4</div>
+          <div class="vc-meta">June 8 · 31.4K total views</div>
+          <div class="vc-plats">
+            <div class="pi pi-yt">▶</div><div class="pi pi-tk">♪</div>
+          </div>
+        </div>
+        <div class="vc">
+          <div class="vc-thumb vc-thumb-proc"><div class="spinner" style="width:20px;height:20px;border-width:2px"></div></div>
+          <div class="status-pill sp-proc"><span class="sp-dot spd-proc"></span>Processing...</div>
+          <div class="vc-name">intermittent_fasting.mp4</div>
+          <div class="vc-meta">June 14 · Generating package</div>
+          <div class="vc-plats">
+            <div class="pi pi-pending">...</div>
+          </div>
+        </div>
       </div>
-     </div>
-     <div class="vid-card">
-      <div class="vid-badge badge-proc">PROCESSING</div>
-      <div class="vid-name">intermittent_fasting_guide.mp4</div>
-      <div class="vid-meta">Nutrition · June 14 · Generating package...</div>
-      <div class="vid-plats">
-       <div class="plat-ic yt-ic" style="opacity:.3">▶</div>
-      </div>
-     </div>
     </div>
-   </div>
-
-   <!-- S1: Upload page -->
-   <div class="dscr" id="s1">
-    <div class="upload-wrap">
-     <div class="app-logo" style="font-size:17px;margin-bottom:28px;">CreatorOS <span class="app-tagline" style="font-size:10px;margin-left:8px;">while you sleep, we handle the busywork</span></div>
-     <div class="upload-h1">Upload your video</div>
-     <div class="upload-sub">Drop your MP4, MOV, MP3, WAV or M4A. We'll transcribe it, research what's winning in your niche, and generate your full upload package — ready to post everywhere.</div>
-     <div class="dropzone drag">
-      <div class="dz-icon">🎬</div>
-      <div class="dz-title">Drop your video or audio here</div>
-      <div class="dz-sub">MP4, MOV, MP3, WAV, M4A · Max 500MB</div>
-     </div>
-     <div class="file-chip">
-      <span style="font-size:26px">📁</span>
-      <div>
-       <div class="file-chip-name">gut_health_deep_dive.mp4</div>
-       <div class="file-chip-size">247.3 MB · MP4</div>
-      </div>
-     </div>
-     <button class="upload-btn" onclick="goS(2)">Start — Transcribe + Generate Package</button>
-    </div>
-   </div>
-
-   <!-- S2: Processing -->
-   <div class="dscr" id="s2">
-    <div class="upload-wrap">
-     <div class="proc-card">
-      <div class="proc-h">Processing gut_health_deep_dive.mp4</div>
-      <div class="proc-sub">Sit back — this usually takes 2–4 minutes. Don't close the tab.</div>
-      <div class="pbar-wrap"><div class="pbar-fill" style="width:61%"></div></div>
-      <div class="pbar-label">Step 3 of 5 · Transcribing</div>
-      <div class="proc-steps">
-       <div class="proc-step">
-        <div class="proc-ic ic-done">✓</div>
-        <div><div class="proc-text done">Upload complete</div><div class="proc-note">247.3 MB received in 18s</div></div>
-       </div>
-       <div class="proc-step">
-        <div class="proc-ic ic-done">✓</div>
-        <div><div class="proc-text done">Audio extracted</div><div class="proc-note">FFmpeg · 34:12 duration</div></div>
-       </div>
-       <div class="proc-step">
-        <div class="proc-ic ic-spin"><div class="spin"></div></div>
-        <div><div class="proc-text active">Transcribing with Whisper...</div><div class="proc-note">~60 seconds remaining</div></div>
-       </div>
-       <div class="proc-step">
-        <div class="proc-ic ic-wait" style="font-size:10px">4</div>
-        <div><div class="proc-text wait">Researching your niche on YouTube</div><div class="proc-note">Analyzing top 30 videos</div></div>
-       </div>
-       <div class="proc-step">
-        <div class="proc-ic ic-wait" style="font-size:10px">5</div>
-        <div><div class="proc-text wait">Generating upload package</div><div class="proc-note">Titles, description, tags, chapters, captions</div></div>
-       </div>
-      </div>
-     </div>
-     <div class="transcript-box">
-      <strong style="color:var(--t2)">Transcript preview</strong><br><br>
-      "...what most people don't realise is that bloating after meals isn't always a digestion issue. In many cases it comes down to the type of fermentable fibers you're consuming and how quickly your gut bacteria break them down. The big ones — onions, garlic, beans — these contain FODMAPs which ferment rapidly and produce gas. This is completely normal but the timing matters enormously..."
-     </div>
-    </div>
-   </div>
-
-   <!-- S3: Package ready -->
-   <div class="dscr" id="s3" style="text-align:center;padding:44px 32px">
-    <div style="width:70px;height:70px;border-radius:50%;background:var(--gr-a);border:2px solid var(--gr);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px">✓</div>
-    <div style="font-size:22px;font-weight:800;color:var(--gr);margin-bottom:8px">Upload package ready</div>
-    <div style="font-size:14px;color:var(--t2);margin-bottom:32px">Transcript, niche research, titles, description, tags, chapters and captions — all generated.</div>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:36px">
-     <div class="stat-card" style="text-align:left;min-width:130px"><div class="stat-n">5</div><div class="stat-l">Title options</div></div>
-     <div class="stat-card" style="text-align:left;min-width:130px"><div class="stat-n">30</div><div class="stat-l">SEO tags</div></div>
-     <div class="stat-card" style="text-align:left;min-width:130px"><div class="stat-n">.srt</div><div class="stat-l">Captions file</div></div>
-     <div class="stat-card" style="text-align:left;min-width:130px"><div class="stat-n">12</div><div class="stat-l">Chapters</div></div>
-    </div>
-    <button class="btn-hero" onclick="goS(4)" style="font-size:15px;padding:15px 36px">Open Video Dashboard →</button>
-   </div>
-
-   <!-- S4: Dashboard main -->
-   <div class="dscr" id="s4">
-    <div class="app-nav">
-     <div><div class="app-logo">CreatorOS</div></div>
-     <button style="background:none;border:1px solid var(--b1);color:var(--t3);padding:7px 14px;border-radius:9px;font-size:11px" onclick="goS(0)">← All videos</button>
-    </div>
-
-    <div class="dash-title">gut_health_deep_dive.mp4</div>
-    <div class="dash-meta">Topic: Gut health & bloating · Uploaded June 12 · <span style="color:var(--or)">🔔 2 notifications</span></div>
-
-    <div class="notif-banner">
-     <span>🔥 Clip opportunity detected — 47 comments referencing 4:23–5:01</span>
-     <button class="notif-close">✕</button>
-    </div>
-
-    <!-- Platform deployment status row -->
-    <div class="plat-row">
-     <div class="plat-btn connected"><span class="pip pip-live"></span> <span class="plat-ic yt-ic" style="width:14px;height:14px;font-size:8px">▶</span> YouTube · Live</div>
-     <div class="plat-btn connected"><span class="pip pip-live"></span> <span class="plat-ic tk-ic" style="width:14px;height:14px;font-size:8px">♪</span> TikTok · 2 clips live</div>
-     <div class="plat-btn connected"><span class="pip pip-live"></span> <span class="plat-ic ig-ic" style="width:14px;height:14px;font-size:8px">📸</span> Instagram · 1 Reel live</div>
-     <div class="plat-btn queue"><span class="pip pip-queue"></span> X · Scheduled</div>
-    </div>
-
-    <!-- Cross-platform analytics -->
-    <div class="xplat-grid">
-     <div class="xplat-card">
-      <div class="xplat-head">
-       <div class="plat-ic yt-ic">▶</div>
-       <div class="xplat-title">YouTube</div>
-      </div>
-      <div class="xplat-row"><span class="xplat-key">Views</span><span class="xplat-val">24,831</span></div>
-      <div class="xplat-row"><span class="xplat-key">Likes</span><span class="xplat-val">1,847</span></div>
-      <div class="xplat-row"><span class="xplat-key">Comments</span><span class="xplat-val">312</span></div>
-      <div class="xplat-row"><span class="xplat-key">Like ratio</span><span class="xplat-val" style="color:var(--gr)">7.4%</span></div>
-     </div>
-     <div class="xplat-card">
-      <div class="xplat-head">
-       <div class="plat-ic tk-ic">♪</div>
-       <div class="xplat-title">TikTok <span style="font-size:10px;color:var(--t3);font-weight:400">2 clips</span></div>
-      </div>
-      <div class="xplat-row"><span class="xplat-key">Views</span><span class="xplat-val">81,200</span></div>
-      <div class="xplat-row"><span class="xplat-key">Likes</span><span class="xplat-val">6,340</span></div>
-      <div class="xplat-row"><span class="xplat-key">Shares</span><span class="xplat-val">1,208</span></div>
-      <div class="xplat-row"><span class="xplat-key">Followers</span><span class="xplat-val" style="color:var(--gr)">+284</span></div>
-     </div>
-     <div class="xplat-card">
-      <div class="xplat-head">
-       <div class="plat-ic ig-ic">📸</div>
-       <div class="xplat-title">Instagram <span style="font-size:10px;color:var(--t3);font-weight:400">1 Reel</span></div>
-      </div>
-      <div class="xplat-row"><span class="xplat-key">Plays</span><span class="xplat-val">38,900</span></div>
-      <div class="xplat-row"><span class="xplat-key">Likes</span><span class="xplat-val">2,910</span></div>
-      <div class="xplat-row"><span class="xplat-key">Saves</span><span class="xplat-val">840</span></div>
-      <div class="xplat-row"><span class="xplat-key">Followers</span><span class="xplat-val" style="color:var(--gr)">+147</span></div>
-     </div>
-    </div>
-
-    <div class="dash-tabs">
-     <button class="dtab on">Upload Package</button>
-     <button class="dtab" onclick="goS(5)">Deploy <span style="font-size:10px;color:var(--or)">↗</span></button>
-     <button class="dtab" onclick="goS(6)">Comments <span class="cnt">83</span></button>
-     <button class="dtab" onclick="goS(7)">Clips <span style="color:var(--or)">🔥 1</span></button>
-     <button class="dtab">Alerts</button>
-    </div>
-
-    <div class="sc">
-     <div class="sc-hd">Title options <span>data-backed from niche research</span></div>
-     <div class="title-opt">
-      <div class="title-rank">#1</div>
-      <div class="title-t">Why Your Stomach Looks Bigger at Night (It's Not What You Think)</div>
-      <div class="title-r">Pattern: question + subverted expectation = 2.3× higher CTR in gut health niche. Structure used by top 3 competitors.</div>
-      <button class="copy-btn">Copy</button>
-     </div>
-     <div class="title-opt">
-      <div class="title-rank">#2</div>
-      <div class="title-t">The FODMAP List That Actually Explains Your Bloating</div>
-      <div class="title-r">Keyword "FODMAP" in 7 of top 30. "Actually" signals new info — outperforms generic titles by 18% in niche.</div>
-      <button class="copy-btn">Copy</button>
-     </div>
-    </div>
-
-    <div class="sc">
-     <div class="sc-hd">Tags (30) <button class="copy-btn" style="font-size:11px">Copy all</button></div>
-     <span class="tag">bloating</span><span class="tag">gut health</span><span class="tag">FODMAP</span>
-     <span class="tag">digestive health</span><span class="tag">stomach bloating</span><span class="tag">gut bacteria</span>
-     <span class="tag">fermentable fiber</span><span class="tag">bloating causes</span><span class="tag">IBS</span>
-     <span class="tag">nutrition science</span><span class="tag">gut microbiome</span><span class="tag">health tips</span>
-    </div>
-
-    <div class="sc">
-     <div class="sc-hd">Recommended Shorts / Clip moments</div>
-     <div class="shorts-grid">
-      <div class="short-card">
-       <div class="short-thumb">🎬</div>
-       <div class="short-body">
-        <div class="short-ts">4:23 – 5:01 · 38s</div>
-        <div class="short-title">Why your stomach looks bigger at night</div>
-        <div class="short-why">47 comments referencing this. Standalone — no context needed.</div>
-       </div>
-      </div>
-      <div class="short-card">
-       <div class="short-thumb">✂️</div>
-       <div class="short-body">
-        <div class="short-ts">11:08 – 12:20 · 72s</div>
-        <div class="short-title">5 foods you think are healthy but aren't</div>
-        <div class="short-why">Counterintuitive hook. Strong emotional trigger.</div>
-       </div>
-      </div>
-      <div class="short-card">
-       <div class="short-thumb">💡</div>
-       <div class="short-body">
-        <div class="short-ts">22:44 – 23:31 · 47s</div>
-        <div class="short-title">Why fermented foods made my bloating worse</div>
-        <div class="short-why">Pattern: contradiction of common advice = 3× shares.</div>
-       </div>
-      </div>
-     </div>
-    </div>
-   </div>
-
-   <!-- S5: Deploy panel -->
-   <div class="dscr" id="s5">
-    <div class="app-nav">
-     <div><div class="app-logo">CreatorOS</div></div>
-     <div style="font-size:12px;color:var(--t3)">gut_health_deep_dive.mp4</div>
-    </div>
-    <div class="dash-tabs">
-     <button class="dtab" onclick="goS(4)">Upload Package</button>
-     <button class="dtab on">Deploy ↗</button>
-     <button class="dtab" onclick="goS(6)">Comments</button>
-     <button class="dtab" onclick="goS(7)">Clips</button>
-     <button class="dtab">Alerts</button>
-    </div>
-
-    <div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px">Deploy this video across platforms</div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:18px">Publish your full video, schedule clips, or post it manually — all from here.</div>
-
-    <div class="deploy-grid">
-     <div class="deploy-card">
-      <div class="v1-chip">V1 LIVE</div>
-      <div class="deploy-ic yt-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px">▶</div>
-      <div class="deploy-name">YouTube</div>
-      <div class="deploy-desc">Your full video — upload package already generated with title, description, tags, chapters and captions.</div>
-      <div class="deploy-status ds-live">● Live · 24,831 views</div>
-      <div style="font-size:11px;color:var(--t3);margin-bottom:12px">youtube.com/watch?v=abc123 · Posted June 12</div>
-      <button class="deploy-btn db-sched">Open in YouTube Studio ↗</button>
-     </div>
-
-     <div class="deploy-card">
-      <div class="v1-chip" style="background:var(--pu-a);border-color:var(--pu);color:var(--pu)">CLIPS READY</div>
-      <div class="deploy-ic tk-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px">♪</div>
-      <div class="deploy-name">TikTok</div>
-      <div class="deploy-desc">3 clip moments detected. Download the package (timestamp + title + caption + hashtags) and cut in CapCut.</div>
-      <div class="deploy-status ds-live">● 2 clips live · 81,200 views</div>
-      <button class="deploy-btn db-dl">⬇ Download clip packages</button>
-     </div>
-
-     <div class="deploy-card">
-      <div class="v1-chip" style="background:var(--pu-a);border-color:var(--pu);color:var(--pu)">CLIPS READY</div>
-      <div class="deploy-ic ig-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px">📸</div>
-      <div class="deploy-name">Instagram Reels</div>
-      <div class="deploy-desc">Same clip packages work for Reels. Caption auto-generated with Instagram hashtags and hook line.</div>
-      <div class="deploy-status ds-live">● 1 Reel live · 38,900 plays</div>
-      <button class="deploy-btn db-dl">⬇ Download for Reels</button>
-     </div>
-
-     <div class="deploy-card">
-      <div class="v2-chip">V2</div>
-      <div class="deploy-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px;background:#111;border:1px solid #333">𝕏</div>
-      <div class="deploy-name">X / Twitter</div>
-      <div class="deploy-desc">Auto-thread from transcript key points. Scheduled for peak engagement window for your account.</div>
-      <div class="deploy-status ds-sched">⏱ Scheduled · Tomorrow 9am</div>
-      <button class="deploy-btn db-v2" disabled>Auto-post (V2)</button>
-     </div>
-    </div>
-   </div>
-
-   <!-- S6: Comments -->
-   <div class="dscr" id="s6">
-    <div class="app-nav">
-     <div><div class="app-logo">CreatorOS</div></div>
-     <div style="font-size:12px;color:var(--t3)">gut_health_deep_dive.mp4</div>
-    </div>
-    <div class="dash-tabs">
-     <button class="dtab" onclick="goS(4)">Upload Package</button>
-     <button class="dtab" onclick="goS(5)">Deploy ↗</button>
-     <button class="dtab on">Comments <span class="cnt">83</span></button>
-     <button class="dtab" onclick="goS(7)">Clips 🔥</button>
-     <button class="dtab">Alerts</button>
-    </div>
-    <div class="sc">
-     <div class="inbox-toolbar">
-      <div class="inbox-title">Comment inbox · 312 total · 83 pending replies</div>
-      <button class="batch-btn" id="batchbtn" onclick="doBatch()">✓ Approve all 83 drafts</button>
-     </div>
-     <div class="com-card" id="c1">
-      <div class="com-head">
-       <div class="plat-ic yt-ic" style="width:16px;height:16px;font-size:7px">▶</div>
-       @healthnerd_emma · YouTube · 2h ago
-      </div>
-      <div class="com-text">This genuinely explained something I've been confused about for years. The FODMAP timing part was mind-blowing — nobody ever talks about timing!</div>
-      <div class="ai-dr">💬 Thanks so much — the timing piece surprised me too when I was researching this! Most content focuses on what to avoid but not when. Glad it landed 🙏</div>
-      <div class="com-acts">
-       <button class="btn-app" onclick="appC('c1',this)">✓ Approve reply</button>
-       <button class="btn-skip">Skip</button>
-      </div>
-     </div>
-     <div class="com-card" id="c2">
-      <div class="com-head">
-       <div class="plat-ic tk-ic" style="width:16px;height:16px;font-size:7px">♪</div>
-       @fitlife_jess · TikTok · 4h ago
-      </div>
-      <div class="com-text">omg the garlic and onion thing is SO true!! following for more 🙌</div>
-      <div class="ai-dr">💬 Haha right?! They're in literally everything 😂 welcome — lots more on this coming soon!</div>
-      <div class="com-acts">
-       <button class="btn-app" onclick="appC('c2',this)">✓ Approve reply</button>
-       <button class="btn-skip">Skip</button>
-      </div>
-     </div>
-     <div class="com-card" id="c3">
-      <div class="com-head">
-       <div class="plat-ic ig-ic" style="width:16px;height:16px;font-size:7px">📸</div>
-       @wellness_maya · Instagram · 6h ago
-      </div>
-      <div class="com-text">Saved! Do you have a full guide on FODMAPs?</div>
-      <div class="ai-dr">💬 I do! Full breakdown in the YouTube video (link in bio) — the FODMAP section starts around 8 mins in 🙌</div>
-      <div class="com-acts">
-       <button class="btn-app" onclick="appC('c3',this)">✓ Approve reply</button>
-       <button class="btn-skip">Skip</button>
-      </div>
-     </div>
-     <div style="text-align:center;padding:14px 0;font-size:12px;color:var(--t4)">+ 80 more comments with AI drafts across YouTube, TikTok & Instagram...</div>
-    </div>
-   </div>
-
-   <!-- S7: Clips -->
-   <div class="dscr" id="s7">
-    <div class="app-nav">
-     <div><div class="app-logo">CreatorOS</div></div>
-     <div style="font-size:12px;color:var(--t3)">gut_health_deep_dive.mp4</div>
-    </div>
-    <div class="dash-tabs">
-     <button class="dtab" onclick="goS(4)">Upload Package</button>
-     <button class="dtab" onclick="goS(5)">Deploy ↗</button>
-     <button class="dtab" onclick="goS(6)">Comments</button>
-     <button class="dtab on">Clips 🔥 1</button>
-     <button class="dtab">Alerts</button>
-    </div>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap">
-     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--tx)">Clip opportunities</div>
-      <div style="font-size:12px;color:var(--t3);margin-top:3px">Detected from comment patterns — your audience told us what to clip</div>
-     </div>
-     <button class="btn-sched" style="padding:9px 16px;font-size:12px">🔍 Detect clips now</button>
-    </div>
-    <div class="clip-card">
-     <div class="clip-fire">🔥 47 comments referencing this moment</div>
-     <div class="clip-title">Why Your Stomach Looks Bigger at Night</div>
-     <div class="clip-why">Your bloating explanation at 4:23 is being quoted repeatedly in comments across YouTube and TikTok. Complete hook-payoff. No context needed. Viewers are requesting a standalone video on this exact moment.</div>
-     <div class="clip-meta">Timestamp: 4:23 – 5:01 (38 seconds) · Suggested post: Tomorrow Wed 6pm<br>Reason: Your last 3 TikToks performed best 5–7pm weekdays</div>
-     <div class="clip-pkg">
-      <strong>Title:</strong> Why your stomach looks bigger at night<br>
-      <strong>Hook:</strong> "Nobody told me this about bloating..."<br>
-      <strong>Description:</strong> The fermentation timing nobody talks about. Full video in bio.<br>
-      <strong>Hashtags:</strong> <span style="color:var(--pu)">#stomachbloating #bloatingtips #guthealthtips #healthtok #FODMAPdiet #guthealth</span>
-     </div>
-     <div class="clip-comments">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px">Comments that triggered this</div>
-      <div class="clip-q">"At 4:23 you said something that completely changed how I think about fermentation timing"</div>
-      <div class="clip-q">"The part around 4 minutes where you explain the night bloating — PLEASE make this its own video"</div>
-      <div class="clip-q">"4:23 saved my life lmao I've been confused about this for 2 years"</div>
-     </div>
-     <div class="clip-acts">
-      <button class="btn-sched">🗓 Schedule</button>
-      <button class="btn-dl">⬇ Download package</button>
-      <button class="btn-dis">Dismiss</button>
-     </div>
-    </div>
-   </div>
-
-  </div><!-- /demo-body -->
-
-  <div class="demo-ctrl">
-   <div class="ctrl-label" id="qlabel">Step 1 of 8</div>
-   <div class="ctrl-btns">
-    <button class="cbtn" onclick="prevS()">← Back</button>
-    <button class="cbtn p" onclick="nextS()" id="qnext">Next →</button>
-   </div>
   </div>
 
- </div><!-- /modal -->
-</div><!-- /modal-overlay -->
+  <!-- ── S1: Upload ── -->
+  <div class="dscreen" id="s1">
+    <div class="app-wrap">
+      <div class="app-header">
+        <div class="app-logo">Creator<span>OS</span></div>
+        <button class="btn-skip-com" style="font-size:12px;padding:7px 14px" onclick="goS(0)">← Back</button>
+      </div>
+      <div class="upload-wrap">
+        <div class="page-title">Upload your video</div>
+        <div class="page-sub" style="margin-bottom:20px">Drop your file and we'll handle transcription, niche research, and your full upload package — everything you need to post everywhere.</div>
+        <div class="dropzone active">
+          <div class="dz-icon">🎬</div>
+          <div class="dz-title">Drop your video or audio here</div>
+          <div class="dz-sub">MP4, MOV, MP3, WAV or M4A · Max 500 MB</div>
+        </div>
+        <div class="file-pill">
+          <div class="file-icon">📁</div>
+          <div>
+            <div class="file-name">gut_health_deep_dive.mp4</div>
+            <div class="file-size">247.3 MB · MP4 · Ready to process</div>
+          </div>
+        </div>
+        <button class="upload-start-btn" onclick="goS(2)">Start — Transcribe + Research + Generate</button>
+        <div class="text-xs" style="text-align:center;margin-top:10px">Usually takes 2–4 minutes. We'll stream progress live.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S2: Processing ── -->
+  <div class="dscreen" id="s2">
+    <div class="app-wrap">
+      <div class="upload-wrap">
+        <div class="proc-card">
+          <div class="proc-head">Processing gut_health_deep_dive.mp4</div>
+          <div class="proc-sub">Sit back — this is all automated. Don't close the tab.</div>
+          <div class="pbar"><div class="pbar-inner" style="width:58%"></div></div>
+          <div class="pbar-label">Step 3 of 5 · Transcribing audio</div>
+          <div class="proc-list">
+            <div class="prow"><div class="prow-ic ic-done">✓</div><div><div class="prow-title done">Upload complete</div><div class="prow-note">247.3 MB received</div></div></div>
+            <div class="prow"><div class="prow-ic ic-done">✓</div><div><div class="prow-title done">Audio extracted</div><div class="prow-note">FFmpeg · 34 min 12 sec</div></div></div>
+            <div class="prow"><div class="prow-ic ic-active"><div class="spinner"></div></div><div><div class="prow-title active">Transcribing with Whisper</div><div class="prow-note">~55 seconds remaining</div></div></div>
+            <div class="prow"><div class="prow-ic ic-wait">4</div><div><div class="prow-title wait">YouTube niche research</div><div class="prow-note">Analyzing top 30 videos in your space</div></div></div>
+            <div class="prow"><div class="prow-ic ic-wait">5</div><div><div class="prow-title wait">Generate upload package</div><div class="prow-note">Titles, description, 30 tags, chapters, .srt captions</div></div></div>
+          </div>
+        </div>
+        <div class="transcript-live">
+          <div class="tl-label">Live transcript preview</div>
+          "...what most people don't realise is that bloating after meals isn't always a digestion issue. In many cases it comes down to the type of fermentable fibers you're consuming and how quickly your gut bacteria break them down. The big ones — onions, garlic, beans — these contain FODMAPs which ferment rapidly and produce gas. This is completely normal but the timing matters enormously..."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S3: Ready ── -->
+  <div class="dscreen" id="s3">
+    <div class="ready-wrap">
+      <div class="ready-icon">✓</div>
+      <div class="ready-title">Upload package ready</div>
+      <div class="ready-sub">Transcript, niche research, titles, description, tags, chapters and captions — all generated and waiting.</div>
+      <div class="ready-stats">
+        <div class="rstat"><div class="rstat-n">5</div><div class="rstat-l">Title options</div></div>
+        <div class="rstat"><div class="rstat-n">30</div><div class="rstat-l">SEO tags</div></div>
+        <div class="rstat"><div class="rstat-n">12</div><div class="rstat-l">Chapters</div></div>
+        <div class="rstat"><div class="rstat-n">.srt</div><div class="rstat-l">Captions file</div></div>
+      </div>
+      <button class="btn-primary" onclick="goS(4)" style="padding:14px 36px;font-size:15px">Open video dashboard →</button>
+    </div>
+  </div>
+
+  <!-- ── S4: Dashboard ── -->
+  <div class="dscreen" id="s4">
+    <div class="app-wrap">
+      <div class="breadcrumb">
+        <a href="#" onclick="goS(0);return false">Videos</a>
+        <span class="bc-sep">›</span>
+        <span>gut_health_deep_dive</span>
+      </div>
+
+      <div class="vid-hero">
+        <div class="vh-info">
+          <div class="vh-title">gut_health_deep_dive.mp4</div>
+          <div class="vh-meta">Gut health & bloating · Uploaded June 12</div>
+        </div>
+        <div class="vh-platforms">
+          <div class="plat-tag live"><span class="pt-dot ptd-live"></span>YouTube · Live</div>
+          <div class="plat-tag live"><span class="pt-dot ptd-live"></span>TikTok · 2 clips</div>
+          <div class="plat-tag live"><span class="pt-dot ptd-live"></span>Instagram · 1 Reel</div>
+          <div class="plat-tag sched"><span class="pt-dot ptd-sched"></span>X · Scheduled</div>
+        </div>
+      </div>
+
+      <div class="alert-bar">
+        <span>🔥 Clip opportunity detected — 47 comments referencing 4:23–5:01 across YouTube + TikTok</span>
+        <button class="alert-bar-close">✕</button>
+      </div>
+
+      <!-- total stats -->
+      <div class="stat-row">
+        <div class="stat"><div class="stat-n">144.9K</div><div class="stat-l">Total views</div><div class="stat-d">↑ +14.2K today</div></div>
+        <div class="stat"><div class="stat-n">11,097</div><div class="stat-l">Total likes</div><div class="stat-d">↑ +820 today</div></div>
+        <div class="stat"><div class="stat-n">431</div><div class="stat-l">Followers gained</div><div class="stat-d">Across 3 platforms</div></div>
+        <div class="stat"><div class="stat-n">1,208</div><div class="stat-l">Shares & saves</div><div class="stat-d neg">🔥 Above average</div></div>
+      </div>
+
+      <!-- per-platform breakdown -->
+      <div class="xplat">
+        <div class="xp">
+          <div class="xp-head"><div class="pi pi-yt">▶</div><div><div class="xp-name">YouTube</div><div class="xp-sub">Full video</div></div></div>
+          <div class="xp-row"><span class="xp-k">Views</span><span class="xp-v">24,831</span></div>
+          <div class="xp-row"><span class="xp-k">Like ratio</span><span class="xp-v hi">7.4%</span></div>
+          <div class="xp-row"><span class="xp-k">Comments</span><span class="xp-v">312</span></div>
+          <div class="xp-row"><span class="xp-k">Watch time</span><span class="xp-v hi">68%</span></div>
+        </div>
+        <div class="xp">
+          <div class="xp-head"><div class="pi pi-tk">♪</div><div><div class="xp-name">TikTok</div><div class="xp-sub">2 clips live</div></div></div>
+          <div class="xp-row"><span class="xp-k">Views</span><span class="xp-v">81,200</span></div>
+          <div class="xp-row"><span class="xp-k">Completion</span><span class="xp-v hi">74%</span></div>
+          <div class="xp-row"><span class="xp-k">Shares</span><span class="xp-v">1,208</span></div>
+          <div class="xp-row"><span class="xp-k">New follows</span><span class="xp-v hi">+284</span></div>
+        </div>
+        <div class="xp">
+          <div class="xp-head"><div class="pi pi-ig">📸</div><div><div class="xp-name">Instagram</div><div class="xp-sub">1 Reel live</div></div></div>
+          <div class="xp-row"><span class="xp-k">Plays</span><span class="xp-v">38,900</span></div>
+          <div class="xp-row"><span class="xp-k">Saves</span><span class="xp-v">840</span></div>
+          <div class="xp-row"><span class="xp-k">Reach</span><span class="xp-v">42,100</span></div>
+          <div class="xp-row"><span class="xp-k">New follows</span><span class="xp-v hi">+147</span></div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab on">Upload Package</button>
+        <button class="tab" onclick="goS(5)">Deploy ↗</button>
+        <button class="tab" onclick="goS(6)">Comments <span class="tab-badge">83</span></button>
+        <button class="tab" onclick="goS(7)">Clips <span class="tab-badge fire">🔥 1</span></button>
+        <button class="tab" onclick="goS(8)">Alerts</button>
+      </div>
+
+      <div class="sc">
+        <div class="sc-head">Title options <span class="sc-head-meta">ranked by projected CTR</span></div>
+        <div class="title-opt">
+          <div class="to-rank">#1 pick</div>
+          <div class="to-text">Why Your Stomach Looks Bigger at Night (It's Not What You Think)</div>
+          <div class="to-reason">Question + subverted expectation → 2.3× higher CTR in gut health niche. Used by top 3 performers in category.</div>
+          <div class="to-actions"><button class="btn-copy">Copy</button><button class="btn-use">Use this</button></div>
+        </div>
+        <div class="title-opt">
+          <div class="to-rank">#2</div>
+          <div class="to-text">The FODMAP List That Actually Explains Your Bloating</div>
+          <div class="to-reason">"FODMAP" appears in 7 of the top 30. "Actually" signals new info and outperforms generic titles by 18%.</div>
+          <div class="to-actions"><button class="btn-copy">Copy</button><button class="btn-use">Use this</button></div>
+        </div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-head">Tags <span class="sc-head-meta">30 generated · sorted by search volume</span></div>
+        <div class="tag-cloud">
+          <span class="tag">bloating</span><span class="tag">gut health</span><span class="tag">FODMAP</span>
+          <span class="tag">digestive health</span><span class="tag">stomach bloating</span><span class="tag">gut bacteria</span>
+          <span class="tag">fermentable fiber</span><span class="tag">bloating causes</span><span class="tag">IBS</span>
+          <span class="tag">gut microbiome</span><span class="tag">nutrition science</span><span class="tag">health tips</span>
+        </div>
+        <div class="to-actions mt12"><button class="btn-use">Copy all 30</button><button class="btn-copy">Download .txt</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S5: Deploy ── -->
+  <div class="dscreen" id="s5">
+    <div class="app-wrap">
+      <div class="breadcrumb"><a href="#" onclick="goS(0);return false">Videos</a><span class="bc-sep">›</span><span>gut_health_deep_dive</span></div>
+      <div class="tabs">
+        <button class="tab" onclick="goS(4)">Upload Package</button>
+        <button class="tab on">Deploy ↗</button>
+        <button class="tab" onclick="goS(6)">Comments</button>
+        <button class="tab" onclick="goS(7)">Clips</button>
+        <button class="tab" onclick="goS(8)">Alerts</button>
+      </div>
+
+      <div class="flex-between" style="margin-bottom:18px">
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--t0)">Deploy this video</div>
+          <div class="text-xs mt4">Publish the full video, push clip packages to short-form platforms, or schedule.</div>
+        </div>
+      </div>
+
+      <div class="deploy-grid">
+        <div class="dcard">
+          <div class="dcard-chip chip-live">Live</div>
+          <div class="dcard-ic pi-yt" style="width:34px;height:34px;font-size:15px;border-radius:9px">▶</div>
+          <div class="dcard-name">YouTube</div>
+          <div class="dcard-desc">Your full video with generated title, description, tags, chapters and .srt captions pre-loaded in Studio.</div>
+          <div class="dcard-status dcs-live">● Live · 24,831 views · June 12</div>
+          <button class="dcard-btn db-outline">Open in YouTube Studio ↗</button>
+        </div>
+        <div class="dcard">
+          <div class="dcard-chip chip-ready">Clips ready</div>
+          <div class="dcard-ic pi-tk" style="width:34px;height:34px;font-size:15px;border-radius:9px">♪</div>
+          <div class="dcard-name">TikTok</div>
+          <div class="dcard-desc">3 clip packages with exact timestamp, title, caption, and hashtags. Cut in CapCut from provided timestamps.</div>
+          <div class="dcard-status dcs-live">● 2 clips live · 81,200 views</div>
+          <button class="dcard-btn db-green">⬇ Download 3 clip packages</button>
+        </div>
+        <div class="dcard">
+          <div class="dcard-chip chip-ready">Clips ready</div>
+          <div class="dcard-ic pi-ig" style="width:34px;height:34px;font-size:15px;border-radius:9px">📸</div>
+          <div class="dcard-name">Instagram Reels</div>
+          <div class="dcard-desc">Same clip packages auto-adapted for Reels — Instagram-optimized caption and up to 30 hashtags.</div>
+          <div class="dcard-status dcs-live">● 1 Reel live · 38,900 plays</div>
+          <button class="dcard-btn db-green">⬇ Download for Reels</button>
+        </div>
+        <div class="dcard">
+          <div class="dcard-chip chip-v2">V2</div>
+          <div class="dcard-ic" style="width:34px;height:34px;font-size:15px;border-radius:9px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center">𝕏</div>
+          <div class="dcard-name">X / Twitter</div>
+          <div class="dcard-desc">Auto-thread from transcript key points. Scheduled for your account's peak engagement window.</div>
+          <div class="dcard-status dcs-sched">⏱ Scheduled · Tomorrow 9am</div>
+          <button class="dcard-btn db-disabled" disabled>Auto-post — Coming in V2</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S6: Comments ── -->
+  <div class="dscreen" id="s6">
+    <div class="app-wrap">
+      <div class="breadcrumb"><a href="#" onclick="goS(0);return false">Videos</a><span class="bc-sep">›</span><span>gut_health_deep_dive</span></div>
+      <div class="tabs">
+        <button class="tab" onclick="goS(4)">Upload Package</button>
+        <button class="tab" onclick="goS(5)">Deploy ↗</button>
+        <button class="tab on">Comments <span class="tab-badge">83</span></button>
+        <button class="tab" onclick="goS(7)">Clips 🔥</button>
+        <button class="tab" onclick="goS(8)">Alerts</button>
+      </div>
+      <div class="sc">
+        <div class="inbox-header">
+          <div>
+            <div class="inbox-title">Comment inbox — all platforms</div>
+            <div class="inbox-sub">312 total comments · 83 pending replies · AI has drafted all of them</div>
+          </div>
+          <button class="batch-approve-btn" id="batchbtn" onclick="doBatch()">✓ Approve all 83 drafts</button>
+        </div>
+
+        <div class="tabs" style="margin-bottom:14px;border-color:var(--line)">
+          <button class="tab on" style="font-size:11px;padding:7px 12px">All (312)</button>
+          <button class="tab" style="font-size:11px;padding:7px 12px">YouTube (198)</button>
+          <button class="tab" style="font-size:11px;padding:7px 12px">TikTok (91)</button>
+          <button class="tab" style="font-size:11px;padding:7px 12px">Instagram (23)</button>
+        </div>
+
+        <div class="com" id="c1">
+          <div class="com-header"><div class="pi pi-yt" style="width:16px;height:16px;font-size:7px">▶</div>@healthnerd_emma · YouTube · 2h ago</div>
+          <div class="com-text">This genuinely explained something I've been confused about for years. The FODMAP timing part was mind-blowing — nobody ever talks about timing!</div>
+          <div class="ai-reply">
+            <div class="ai-reply-label">AI draft</div>
+            Thanks so much — the timing piece surprised me too when I was researching this! Most content focuses on what to avoid but not when. Glad it landed 🙏
+          </div>
+          <div class="com-acts">
+            <button class="btn-approve" onclick="appC('c1',this)">✓ Approve reply</button>
+            <button class="btn-skip-com">Skip</button>
+          </div>
+        </div>
+
+        <div class="com" id="c2">
+          <div class="com-header"><div class="pi pi-tk" style="width:16px;height:16px;font-size:7px">♪</div>@fitlife_jess · TikTok · 4h ago</div>
+          <div class="com-text">omg the garlic and onion thing is SO true!! following for more 🙌</div>
+          <div class="ai-reply">
+            <div class="ai-reply-label">AI draft</div>
+            Haha right?! They're in literally everything 😂 Welcome — lots more on this coming soon!
+          </div>
+          <div class="com-acts">
+            <button class="btn-approve" onclick="appC('c2',this)">✓ Approve reply</button>
+            <button class="btn-skip-com">Skip</button>
+          </div>
+        </div>
+
+        <div class="com" id="c3">
+          <div class="com-header"><div class="pi pi-ig" style="width:16px;height:16px;font-size:7px">📸</div>@wellness_maya · Instagram · 6h ago</div>
+          <div class="com-text">Saved! Do you have a full guide on FODMAPs anywhere?</div>
+          <div class="ai-reply">
+            <div class="ai-reply-label">AI draft</div>
+            Yes! Full breakdown in the YouTube video (link in bio) — the FODMAP deep-dive starts around 8 mins in 🙌
+          </div>
+          <div class="com-acts">
+            <button class="btn-approve" onclick="appC('c3',this)">✓ Approve reply</button>
+            <button class="btn-skip-com">Skip</button>
+          </div>
+        </div>
+
+        <div class="more-indicator">+ 80 more comments with AI drafts across all platforms...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S7: Clips ── -->
+  <div class="dscreen" id="s7">
+    <div class="app-wrap">
+      <div class="breadcrumb"><a href="#" onclick="goS(0);return false">Videos</a><span class="bc-sep">›</span><span>gut_health_deep_dive</span></div>
+      <div class="tabs">
+        <button class="tab" onclick="goS(4)">Upload Package</button>
+        <button class="tab" onclick="goS(5)">Deploy ↗</button>
+        <button class="tab" onclick="goS(6)">Comments</button>
+        <button class="tab on">Clips <span class="tab-badge fire">🔥 1</span></button>
+        <button class="tab" onclick="goS(8)">Alerts</button>
+      </div>
+
+      <div class="flex-between" style="margin-bottom:16px">
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--t0)">Clip opportunities</div>
+          <div class="text-xs mt4">Detected from comment clusters — your audience tells us what to clip. Runs every 2 hours.</div>
+        </div>
+        <button class="btn-sched-clip">🔍 Scan now</button>
+      </div>
+
+      <div class="clip-card">
+        <div class="clip-signal cs-hot">🔥 47 comments referencing this moment</div>
+        <div class="clip-title">Why Your Stomach Looks Bigger at Night</div>
+        <div class="clip-why">Your bloating explanation at 4:23 is being quoted repeatedly across YouTube and TikTok comments. Complete hook-payoff structure. No context needed. Viewers are actively requesting a standalone video.</div>
+        <div class="clip-ts">Timestamp: 4:23 – 5:01 &nbsp;·&nbsp; 38 seconds &nbsp;·&nbsp; Suggested: Tomorrow Wed 6pm &nbsp;·&nbsp; Your TikToks perform best 5–7pm weekdays</div>
+        <div class="clip-pkg">
+          <div class="cpkg-row"><span class="cpkg-k">Title</span><span class="cpkg-v">Why your stomach looks bigger at night</span></div>
+          <div class="cpkg-row"><span class="cpkg-k">Hook</span><span class="cpkg-v">"Nobody told me this about bloating..."</span></div>
+          <div class="cpkg-row"><span class="cpkg-k">Caption</span><span class="cpkg-v">The fermentation timing nobody talks about. Full video in bio.</span></div>
+          <div class="cpkg-row"><span class="cpkg-k">Hashtags</span><span class="cpkg-tags">#stomachbloating #bloatingtips #guthealthtips #healthtok #FODMAPdiet</span></div>
+        </div>
+        <div class="clip-triggers">
+          <div class="ct-label">Comments that triggered this</div>
+          <div class="ct-q">"At 4:23 you said something that completely changed how I think about fermentation timing"</div>
+          <div class="ct-q">"The part around 4 minutes where you explain the night bloating — PLEASE make this its own video"</div>
+          <div class="ct-q">"4:23 saved my life lmao I've been confused about this for 2 years"</div>
+        </div>
+        <div class="clip-actions">
+          <button class="btn-sched-clip">🗓 Schedule</button>
+          <button class="btn-dl-clip">⬇ Download package</button>
+          <button class="btn-dismiss">Dismiss</button>
+        </div>
+      </div>
+
+      <div class="clip-card" style="opacity:.55">
+        <div class="clip-signal cs-sched">🗓 Scheduled · Wed 6pm</div>
+        <div class="clip-title">5 Foods You Think Are Healthy But Aren't</div>
+        <div class="clip-ts">11:08 – 12:20 · Posting to TikTok + Instagram Reels</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S8: Alerts ── -->
+  <div class="dscreen" id="s8">
+    <div class="app-wrap">
+      <div class="breadcrumb"><a href="#" onclick="goS(0);return false">Videos</a><span class="bc-sep">›</span><span>gut_health_deep_dive</span></div>
+      <div class="tabs">
+        <button class="tab" onclick="goS(4)">Upload Package</button>
+        <button class="tab" onclick="goS(5)">Deploy ↗</button>
+        <button class="tab" onclick="goS(6)">Comments</button>
+        <button class="tab" onclick="goS(7)">Clips</button>
+        <button class="tab on">Alerts</button>
+      </div>
+
+      <div class="sc">
+        <div class="sc-head">Active alerts for this video</div>
+        <div class="alert-list">
+          <div class="alert-item"><span>🎉 Notify when total views reach 200,000</span><span class="at at-on">Active</span></div>
+          <div class="alert-item"><span>💬 Notify when YouTube comments reach 500</span><span class="at at-on">Active</span></div>
+          <div class="alert-item"><span>⚠️ Notify if like ratio drops below 5%</span><span class="at at-on">Active</span></div>
+          <div class="alert-item"><span>🔥 Comment spike — more than 30 per hour</span><span class="at at-fired">⚡ Fired 2h ago</span></div>
+        </div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-head">Add alert</div>
+        <div class="alert-add-row">
+          <select class="a-sel">
+            <option>Views reach</option>
+            <option>Like ratio drops below</option>
+            <option>Comments reach</option>
+            <option>Comment spike (per hour)</option>
+            <option>New followers spike</option>
+          </select>
+          <input class="a-inp" type="number" placeholder="e.g. 50000"/>
+          <select class="a-sel">
+            <option>All platforms</option>
+            <option>YouTube only</option>
+            <option>TikTok only</option>
+            <option>Instagram only</option>
+          </select>
+          <button class="a-add-btn">+ Add</button>
+        </div>
+        <div class="text-xs mt12">Alerts check every 30 minutes. You can set different thresholds per video per platform.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-foot">
+    <div class="demo-foot-label" id="q-label">Step 1 of 9</div>
+    <div class="demo-foot-btns">
+      <button class="dfbtn" onclick="prevS()">← Back</button>
+      <button class="dfbtn p" onclick="nextS()" id="q-next">Next →</button>
+    </div>
+  </div>
+
+</div>
+</div>
 
 
 <!-- ════════════════════════════════════════════
-     FULL VERSION DEMO MODAL
+     FULL PLATFORM OVERVIEW MODAL
 ════════════════════════════════════════════ -->
-<div class="modal-overlay" id="fmo" onclick="fmoClick(event)">
- <div class="modal" id="fdemo" style="max-width:1020px">
+<div class="overlay" id="foverlay" onclick="fovClick(event)">
+<div class="modal" style="max-width:1020px">
 
-  <div class="modal-hd">
-   <span class="modal-hd-title">CreatorOS — Full Version Demo · All platforms + Roadmap</span>
-   <button class="modal-hd-close" onclick="closeFull()">✕</button>
+  <div class="modal-bar">
+    <span class="modal-bar-title">CreatorOS — Platform overview</span>
+    <button class="modal-close" onclick="closeFull()">✕</button>
   </div>
 
   <div class="browser">
-   <div class="bdots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div>
-   <div class="burl">app.creatorOS.io/dashboard/gut_health_deep_dive</div>
+    <div class="browser-dots"><div class="bdot bdot-r"></div><div class="bdot bdot-y"></div><div class="bdot bdot-g"></div></div>
+    <div class="browser-url">app.creatoros.io/dashboard/gut_health_deep_dive</div>
   </div>
 
-  <div class="plat-tabs">
-   <button class="ptab on" onclick="switchP('yt',this)">📊 Full Dashboard</button>
-   <button class="ptab" onclick="switchP('deploy',this)">🚀 Cross-Platform Deploy</button>
-   <button class="ptab" onclick="switchP('clips',this)">✂️ Clip Intelligence</button>
-   <button class="ptab" onclick="switchP('inbox',this)">💬 Unified Inbox</button>
-   <button class="ptab" onclick="switchP('alerts',this)">🔔 Alert System</button>
-   <button class="ptab" onclick="switchP('road',this)">🗺 Roadmap</button>
+  <div class="ftabs">
+    <button class="ftab on" onclick="switchFP('overview',this)">📊 Full dashboard</button>
+    <button class="ftab" onclick="switchFP('deploy',this)">🚀 Deploy</button>
+    <button class="ftab" onclick="switchFP('clips',this)">✂️ Clip intelligence</button>
+    <button class="ftab" onclick="switchFP('inbox',this)">💬 Unified inbox</button>
+    <button class="ftab" onclick="switchFP('alerts',this)">🔔 Alerts</button>
+    <button class="ftab" onclick="switchFP('road',this)">🗺 Roadmap</button>
   </div>
 
-  <!-- Full Dashboard -->
-  <div class="ppanel on" id="pp-yt">
-   <div style="font-size:20px;font-weight:800;color:var(--tx);margin-bottom:4px">gut_health_deep_dive.mp4</div>
-   <div style="font-size:12px;color:var(--t3);margin-bottom:16px">Topic: Gut health & bloating · Posted June 12 · 3 platforms live</div>
-
-   <div class="plat-row">
-    <div class="plat-btn connected"><span class="pip pip-live"></span> YouTube · 24.8K views</div>
-    <div class="plat-btn connected"><span class="pip pip-live"></span> TikTok · 81.2K views</div>
-    <div class="plat-btn connected"><span class="pip pip-live"></span> Instagram · 38.9K plays</div>
-    <div class="plat-btn queue"><span class="pip pip-queue"></span> X · Scheduled tomorrow</div>
-   </div>
-
-   <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Total reach across all platforms</div>
-   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-n">144.9K</div><div class="stat-l">Total views</div><div class="stat-ch">↑ +14.2K today</div></div>
-    <div class="stat-card"><div class="stat-n">11,097</div><div class="stat-l">Total likes</div><div class="stat-ch">↑ +820 today</div></div>
-    <div class="stat-card"><div class="stat-n">431</div><div class="stat-l">Total followers gained</div><div class="stat-ch">across 3 platforms</div></div>
-    <div class="stat-card"><div class="stat-n">1,208</div><div class="stat-l">Shares / Saves</div><div class="stat-ba">🔥 Above avg</div></div>
-   </div>
-
-   <div class="xplat-grid">
-    <div class="xplat-card">
-     <div class="xplat-head"><div class="plat-ic yt-ic">▶</div><div class="xplat-title">YouTube</div></div>
-     <div class="xplat-row"><span class="xplat-key">Views</span><span class="xplat-val">24,831</span></div>
-     <div class="xplat-row"><span class="xplat-key">Like ratio</span><span class="xplat-val" style="color:var(--gr)">7.4%</span></div>
-     <div class="xplat-row"><span class="xplat-key">Comments</span><span class="xplat-val">312</span></div>
-     <div class="xplat-row"><span class="xplat-key">Watch time</span><span class="xplat-val">68%</span></div>
+  <!-- Overview -->
+  <div class="fpanel on" id="pp-overview">
+    <div class="fpanel-wrap">
+      <div class="flex-between" style="margin-bottom:16px">
+        <div>
+          <div style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--t0)">gut_health_deep_dive.mp4</div>
+          <div class="text-xs mt4">Topic: Gut health & bloating · June 12 · 3 platforms live · 1 scheduled</div>
+        </div>
+      </div>
+      <div class="vh-platforms" style="margin-bottom:16px">
+        <div class="plat-tag live"><span class="pt-dot ptd-live"></span>YouTube · 24.8K views</div>
+        <div class="plat-tag live"><span class="pt-dot ptd-live"></span>TikTok · 81.2K views</div>
+        <div class="plat-tag live"><span class="pt-dot ptd-live"></span>Instagram · 38.9K plays</div>
+        <div class="plat-tag sched"><span class="pt-dot ptd-sched"></span>X · Tomorrow 9am</div>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;font-family:var(--mono)">Combined reach — all platforms</div>
+      <div class="stat-row">
+        <div class="stat"><div class="stat-n">144.9K</div><div class="stat-l">Total views</div><div class="stat-d">↑ +14.2K today</div></div>
+        <div class="stat"><div class="stat-n">11,097</div><div class="stat-l">Total likes</div><div class="stat-d">↑ +820 today</div></div>
+        <div class="stat"><div class="stat-n">431</div><div class="stat-l">Followers gained</div><div class="stat-d">All platforms</div></div>
+        <div class="stat"><div class="stat-n">1,208</div><div class="stat-l">Shares & saves</div><div class="stat-d neg">🔥 3× avg</div></div>
+      </div>
+      <div class="xplat">
+        <div class="xp">
+          <div class="xp-head"><div class="pi pi-yt">▶</div><div><div class="xp-name">YouTube</div></div></div>
+          <div class="xp-row"><span class="xp-k">Views</span><span class="xp-v">24,831</span></div>
+          <div class="xp-row"><span class="xp-k">Like ratio</span><span class="xp-v hi">7.4%</span></div>
+          <div class="xp-row"><span class="xp-k">Comments</span><span class="xp-v">312</span></div>
+          <div class="xp-row"><span class="xp-k">Watch time</span><span class="xp-v hi">68%</span></div>
+        </div>
+        <div class="xp">
+          <div class="xp-head"><div class="pi pi-tk">♪</div><div><div class="xp-name">TikTok</div><div class="xp-sub">2 clips</div></div></div>
+          <div class="xp-row"><span class="xp-k">Views</span><span class="xp-v">81,200</span></div>
+          <div class="xp-row"><span class="xp-k">Completion</span><span class="xp-v hi">74%</span></div>
+          <div class="xp-row"><span class="xp-k">Shares</span><span class="xp-v">1,208</span></div>
+          <div class="xp-row"><span class="xp-k">Followers</span><span class="xp-v hi">+284</span></div>
+        </div>
+        <div class="xp">
+          <div class="xp-head"><div class="pi pi-ig">📸</div><div><div class="xp-name">Instagram</div><div class="xp-sub">1 Reel</div></div></div>
+          <div class="xp-row"><span class="xp-k">Plays</span><span class="xp-v">38,900</span></div>
+          <div class="xp-row"><span class="xp-k">Saves</span><span class="xp-v">840</span></div>
+          <div class="xp-row"><span class="xp-k">Reach</span><span class="xp-v">42,100</span></div>
+          <div class="xp-row"><span class="xp-k">Followers</span><span class="xp-v hi">+147</span></div>
+        </div>
+      </div>
     </div>
-    <div class="xplat-card">
-     <div class="xplat-head"><div class="plat-ic tk-ic">♪</div><div class="xplat-title">TikTok · 2 clips</div></div>
-     <div class="xplat-row"><span class="xplat-key">Views</span><span class="xplat-val">81,200</span></div>
-     <div class="xplat-row"><span class="xplat-key">Completion</span><span class="xplat-val" style="color:var(--gr)">74%</span></div>
-     <div class="xplat-row"><span class="xplat-key">Shares</span><span class="xplat-val">1,208</span></div>
-     <div class="xplat-row"><span class="xplat-key">New follows</span><span class="xplat-val">+284</span></div>
-    </div>
-    <div class="xplat-card">
-     <div class="xplat-head"><div class="plat-ic ig-ic">📸</div><div class="xplat-title">Instagram · 1 Reel</div></div>
-     <div class="xplat-row"><span class="xplat-key">Plays</span><span class="xplat-val">38,900</span></div>
-     <div class="xplat-row"><span class="xplat-key">Saves</span><span class="xplat-val">840</span></div>
-     <div class="xplat-row"><span class="xplat-key">Reach</span><span class="xplat-val">42,100</span></div>
-     <div class="xplat-row"><span class="xplat-key">New follows</span><span class="xplat-val">+147</span></div>
-    </div>
-   </div>
   </div>
 
-  <!-- Deploy panel -->
-  <div class="ppanel" id="pp-deploy">
-   <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px">Deploy across platforms</div>
-   <div style="font-size:12px;color:var(--t3);margin-bottom:20px">Your upload package is ready. Publish your full video, or push clip packages to short-form platforms.</div>
-   <div class="deploy-grid">
-    <div class="deploy-card">
-     <div class="v1-chip">V1 LIVE</div>
-     <div class="deploy-ic yt-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px">▶</div>
-     <div class="deploy-name">YouTube</div>
-     <div class="deploy-desc">Full video with generated title, description, tags, chapters and .srt captions pre-filled.</div>
-     <div class="deploy-status ds-live">● Live · 24,831 views</div>
-     <button class="deploy-btn db-sched">Open YouTube Studio ↗</button>
+  <!-- Deploy -->
+  <div class="fpanel" id="pp-deploy">
+    <div class="fpanel-wrap">
+      <div style="font-size:14px;font-weight:600;color:var(--t0);margin-bottom:4px">Deploy across platforms</div>
+      <div class="text-xs" style="margin-bottom:18px">Upload package ready. Push the full video or generate clip packages for short-form platforms.</div>
+      <div class="deploy-grid">
+        <div class="dcard"><div class="dcard-chip chip-live">Live</div><div class="dcard-ic pi-yt" style="width:34px;height:34px;font-size:15px;border-radius:9px">▶</div><div class="dcard-name">YouTube</div><div class="dcard-desc">Full video, title, description, tags, chapters and captions pre-filled.</div><div class="dcard-status dcs-live">● Live · 24,831 views</div><button class="dcard-btn db-outline">Open YouTube Studio ↗</button></div>
+        <div class="dcard"><div class="dcard-chip chip-ready">Clips ready</div><div class="dcard-ic pi-tk" style="width:34px;height:34px;font-size:15px;border-radius:9px">♪</div><div class="dcard-name">TikTok</div><div class="dcard-desc">3 clip packages — timestamp, title, caption overlay, hashtags. Cut in CapCut.</div><div class="dcard-status dcs-live">● 2 clips live · 81.2K views</div><button class="dcard-btn db-green">⬇ Download clip packages (3)</button></div>
+        <div class="dcard"><div class="dcard-chip chip-ready">Clips ready</div><div class="dcard-ic pi-ig" style="width:34px;height:34px;font-size:15px;border-radius:9px">📸</div><div class="dcard-name">Instagram Reels</div><div class="dcard-desc">Instagram-optimized captions, up to 30 hashtags and a hook line auto-generated.</div><div class="dcard-status dcs-live">● 1 Reel live · 38.9K plays</div><button class="dcard-btn db-green">⬇ Download for Reels</button></div>
+        <div class="dcard"><div class="dcard-chip chip-v2">V2</div><div class="dcard-ic" style="width:34px;height:34px;font-size:15px;border-radius:9px;background:#111;border:1px solid #333;display:flex;align-items:center;justify-content:center">𝕏</div><div class="dcard-name">X / Twitter</div><div class="dcard-desc">Auto-thread from transcript key points. Scheduled for peak engagement window.</div><div class="dcard-status dcs-sched">⏱ Tomorrow 9am</div><button class="dcard-btn db-disabled" disabled>Auto-post — Coming in V2</button></div>
+      </div>
     </div>
-    <div class="deploy-card">
-     <div class="v1-chip" style="background:var(--pu-a);border-color:var(--pu);color:var(--pu)">CLIPS READY</div>
-     <div class="deploy-ic tk-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px">♪</div>
-     <div class="deploy-name">TikTok</div>
-     <div class="deploy-desc">Clip packages with exact timestamp, title, caption overlay, and hashtags. Cut in CapCut from provided timestamp.</div>
-     <div class="deploy-status ds-live">● 2 clips live · 81.2K views</div>
-     <button class="deploy-btn db-dl">⬇ Download clip packages (3)</button>
-    </div>
-    <div class="deploy-card">
-     <div class="v1-chip" style="background:var(--pu-a);border-color:var(--pu);color:var(--pu)">CLIPS READY</div>
-     <div class="deploy-ic ig-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px">📸</div>
-     <div class="deploy-name">Instagram Reels</div>
-     <div class="deploy-desc">Instagram-optimized captions auto-generated with up to 30 hashtags and a hook line.</div>
-     <div class="deploy-status ds-live">● 1 Reel live · 38.9K plays</div>
-     <button class="deploy-btn db-dl">⬇ Download for Reels</button>
-    </div>
-    <div class="deploy-card">
-     <div class="v2-chip">V2</div>
-     <div class="deploy-ic" style="width:36px;height:36px;font-size:16px;border-radius:10px;background:#111;border:1px solid #333">𝕏</div>
-     <div class="deploy-name">X / Twitter</div>
-     <div class="deploy-desc">Auto-thread from transcript highlights. Scheduled for peak engagement window for your account.</div>
-     <div class="deploy-status ds-sched">⏱ Scheduled · Tomorrow 9am</div>
-     <button class="deploy-btn db-v2" disabled>Auto-post (V2)</button>
-    </div>
-   </div>
   </div>
 
-  <!-- Clip Intelligence -->
-  <div class="ppanel" id="pp-clips">
-   <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px">Clip intelligence — comment-driven detection</div>
-   <div style="font-size:12px;color:var(--t3);margin-bottom:20px">Runs every 2 hours. When 5+ comments reference the same moment, we generate the full clip package automatically.</div>
-   <div class="clip-card">
-    <div class="clip-fire">🔥 47 comments referencing this moment</div>
-    <div class="clip-title">Why Your Stomach Looks Bigger at Night</div>
-    <div class="clip-why">YouTube and TikTok comments both referencing 4:23–5:01. "Complete hook-payoff. No context needed." Package auto-generated and waiting for your approval.</div>
-    <div class="clip-meta">Timestamp: 4:23 – 5:01 (38 seconds) · Suggested: Tomorrow Wed 6pm</div>
-    <div class="clip-pkg">
-     <strong>Title:</strong> Why your stomach looks bigger at night<br>
-     <strong>Hook:</strong> "Nobody told me this about bloating..."<br>
-     <strong>Hashtags:</strong> <span style="color:var(--pu)">#stomachbloating #bloatingtips #guthealthtips #healthtok #FODMAP</span>
+  <!-- Clip intelligence -->
+  <div class="fpanel" id="pp-clips">
+    <div class="fpanel-wrap">
+      <div style="font-size:14px;font-weight:600;color:var(--t0);margin-bottom:4px">Clip intelligence</div>
+      <div class="text-xs" style="margin-bottom:20px">Scans every 2 hours. When 5+ comments reference the same moment, the full clip package is auto-generated.</div>
+      <div class="clip-card">
+        <div class="clip-signal cs-hot">🔥 47 comments referencing this moment</div>
+        <div class="clip-title">Why Your Stomach Looks Bigger at Night</div>
+        <div class="clip-why">YouTube and TikTok comments both clustering around 4:23–5:01. Complete hook-payoff. No context needed. Package auto-generated and waiting for approval.</div>
+        <div class="clip-ts">4:23 – 5:01 (38 seconds) · Suggested: Tomorrow Wed 6pm</div>
+        <div class="clip-pkg">
+          <div class="cpkg-row"><span class="cpkg-k">Title</span><span class="cpkg-v">Why your stomach looks bigger at night</span></div>
+          <div class="cpkg-row"><span class="cpkg-k">Hook</span><span class="cpkg-v">"Nobody told me this about bloating..."</span></div>
+          <div class="cpkg-row"><span class="cpkg-k">Hashtags</span><span class="cpkg-tags">#stomachbloating #bloatingtips #guthealthtips #healthtok #FODMAP</span></div>
+        </div>
+        <div class="clip-triggers">
+          <div class="ct-label">Triggering comments</div>
+          <div class="ct-q">"At 4:23 you said something that completely changed how I think about fermentation timing"</div>
+          <div class="ct-q">"The part around 4 minutes — PLEASE make this its own video"</div>
+          <div class="ct-q">"4:23 saved my life I've been confused about this for 2 years"</div>
+        </div>
+        <div class="clip-actions">
+          <button class="btn-sched-clip">🗓 Schedule post</button>
+          <button class="btn-dl-clip">⬇ Download package</button>
+          <button class="btn-dismiss">Dismiss</button>
+        </div>
+      </div>
+      <div class="clip-card" style="opacity:.55">
+        <div class="clip-signal cs-sched">🗓 Scheduled · Wed 6pm → TikTok + Instagram</div>
+        <div class="clip-title">5 Foods You Think Are Healthy But Aren't</div>
+        <div class="clip-ts">11:08 – 12:20</div>
+      </div>
     </div>
-    <div class="clip-comments">
-     <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px">Triggering comments</div>
-     <div class="clip-q">"At 4:23 you said something that completely changed how I think about fermentation timing"</div>
-     <div class="clip-q">"The part around 4 minutes — PLEASE make this its own video"</div>
-     <div class="clip-q">"4:23 saved my life I've been confused about this for 2 years"</div>
-    </div>
-    <div class="clip-acts">
-     <button class="btn-sched">🗓 Schedule post</button>
-     <button class="btn-dl">⬇ Download package</button>
-     <button class="btn-dis">Dismiss</button>
-    </div>
-   </div>
-   <div class="clip-card" style="opacity:.6">
-    <div class="clip-fire" style="color:var(--pu)">🗓 Scheduled · Wed 6pm</div>
-    <div class="clip-title">5 Foods You Think Are Healthy But Aren't</div>
-    <div class="clip-meta">11:08 – 12:20 · Posting to TikTok + Instagram Reels</div>
-   </div>
   </div>
 
-  <!-- Unified Inbox -->
-  <div class="ppanel" id="pp-inbox">
-   <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px">Unified comment inbox</div>
-   <div style="font-size:12px;color:var(--t3);margin-bottom:16px">All platforms, all comments, one place. AI drafts a reply for every one.</div>
-   <div class="dash-tabs" style="margin-bottom:16px">
-    <button class="dtab on">All (247)</button>
-    <button class="dtab">YouTube (83)</button>
-    <button class="dtab">TikTok (141)</button>
-    <button class="dtab">Instagram (23)</button>
-   </div>
-   <div class="sc" style="padding:16px">
-    <div class="inbox-toolbar">
-     <div class="inbox-title">247 total · 180 pending</div>
-     <button class="batch-btn">✓ Approve all 180</button>
+  <!-- Unified inbox -->
+  <div class="fpanel" id="pp-inbox">
+    <div class="fpanel-wrap">
+      <div class="tabs" style="margin-bottom:14px">
+        <button class="tab on" style="font-size:11px;padding:7px 12px">All (312)</button>
+        <button class="tab" style="font-size:11px;padding:7px 12px">YouTube (198)</button>
+        <button class="tab" style="font-size:11px;padding:7px 12px">TikTok (91)</button>
+        <button class="tab" style="font-size:11px;padding:7px 12px">Instagram (23)</button>
+      </div>
+      <div class="sc">
+        <div class="inbox-header">
+          <div><div class="inbox-title">All platforms · 312 comments</div><div class="inbox-sub">180 pending AI-drafted replies</div></div>
+          <button class="batch-approve-btn">✓ Approve all 180</button>
+        </div>
+        <div class="com"><div class="com-header"><div class="pi pi-yt" style="width:16px;height:16px;font-size:7px">▶</div>@healthnerd_emma · YouTube · 2h</div><div class="com-text">This genuinely explained something I've been confused about for years.</div><div class="ai-reply"><div class="ai-reply-label">AI draft</div>Thanks so much — glad it landed! The timing piece surprised me too when researching 🙏</div><div class="com-acts"><button class="btn-approve">✓ Approve</button><button class="btn-skip-com">Skip</button></div></div>
+        <div class="com"><div class="com-header"><div class="pi pi-tk" style="width:16px;height:16px;font-size:7px">♪</div>@fitlife_jess · TikTok · 4h</div><div class="com-text">omg the garlic thing is SO true following for more 🙌</div><div class="ai-reply"><div class="ai-reply-label">AI draft</div>Haha right?! They're in literally everything 😂 Welcome!</div><div class="com-acts"><button class="btn-approve">✓ Approve</button><button class="btn-skip-com">Skip</button></div></div>
+        <div class="com" style="border-bottom:none"><div class="com-header"><div class="pi pi-ig" style="width:16px;height:16px;font-size:7px">📸</div>@wellness_maya · Instagram · 6h</div><div class="com-text">Saved! Do you have a full FODMAP guide?</div><div class="ai-reply"><div class="ai-reply-label">AI draft</div>Yes! Full breakdown on YouTube (link in bio) — starts around 8 mins 🙌</div><div class="com-acts"><button class="btn-approve">✓ Approve</button><button class="btn-skip-com">Skip</button></div></div>
+      </div>
     </div>
-    <div class="com-card">
-     <div class="com-head"><div class="plat-ic yt-ic" style="width:16px;height:16px;font-size:7px">▶</div> @healthnerd_emma · YouTube · 2h ago</div>
-     <div class="com-text">This genuinely explained something I've been confused about for years.</div>
-     <div class="ai-dr">💬 Thanks so much — glad it landed! The timing piece surprised me too when researching 🙏</div>
-     <div class="com-acts"><button class="btn-app">✓ Approve</button><button class="btn-skip">Skip</button></div>
-    </div>
-    <div class="com-card">
-     <div class="com-head"><div class="plat-ic tk-ic" style="width:16px;height:16px;font-size:7px">♪</div> @fitlife_jess · TikTok · 4h ago</div>
-     <div class="com-text">omg the garlic thing is SO true following for more 🙌</div>
-     <div class="ai-dr">💬 Haha right?! They're in literally everything 😂 Welcome — more on this soon!</div>
-     <div class="com-acts"><button class="btn-app">✓ Approve</button><button class="btn-skip">Skip</button></div>
-    </div>
-    <div class="com-card" style="border-bottom:none">
-     <div class="com-head"><div class="plat-ic ig-ic" style="width:16px;height:16px;font-size:7px">📸</div> @wellness_maya · Instagram · 6h ago</div>
-     <div class="com-text">Saved! Do you have a full FODMAP guide?</div>
-     <div class="ai-dr">💬 Yes! Full breakdown on YouTube (link in bio) — starts around 8 mins 🙌</div>
-     <div class="com-acts"><button class="btn-app">✓ Approve</button><button class="btn-skip">Skip</button></div>
-    </div>
-   </div>
   </div>
 
   <!-- Alerts -->
-  <div class="ppanel" id="pp-alerts">
-   <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px">Alert system</div>
-   <div style="font-size:12px;color:var(--t3);margin-bottom:20px">We check every 30 minutes and notify you the moment conditions are met.</div>
-   <div class="sc">
-    <div class="sc-hd">Active alerts for gut_health_deep_dive</div>
-    <div class="alert-row-item">
-     <span>🎉 Notify when total views reach 200,000</span>
-     <span class="alert-trig at-active">Active</span>
+  <div class="fpanel" id="pp-alerts">
+    <div class="fpanel-wrap">
+      <div class="sc">
+        <div class="sc-head">Active alerts — gut_health_deep_dive</div>
+        <div class="alert-list">
+          <div class="alert-item"><span>🎉 Total views reach 200,000</span><span class="at at-on">Active</span></div>
+          <div class="alert-item"><span>💬 YouTube comments reach 500</span><span class="at at-on">Active</span></div>
+          <div class="alert-item"><span>⚠️ Like ratio drops below 5%</span><span class="at at-on">Active</span></div>
+          <div class="alert-item"><span>🔥 Comment spike — 30+ per hour</span><span class="at at-fired">⚡ Fired 2h ago</span></div>
+        </div>
+      </div>
+      <div class="sc">
+        <div class="sc-head">Add alert</div>
+        <div class="alert-add-row">
+          <select class="a-sel"><option>Views reach</option><option>Like ratio drops below</option><option>Comments reach</option><option>Comment spike (per hour)</option></select>
+          <input class="a-inp" type="number" placeholder="e.g. 50000"/>
+          <select class="a-sel"><option>All platforms</option><option>YouTube only</option><option>TikTok only</option></select>
+          <button class="a-add-btn">+ Add</button>
+        </div>
+      </div>
     </div>
-    <div class="alert-row-item">
-     <span>💬 Notify when YouTube comments reach 500</span>
-     <span class="alert-trig at-active">Active</span>
-    </div>
-    <div class="alert-row-item">
-     <span>⚠️ Notify if YouTube like ratio drops below 5%</span>
-     <span class="alert-trig at-active">Active</span>
-    </div>
-    <div class="alert-row-item">
-     <span>🔥 Comment spike — more than 30 in 1 hour</span>
-     <span class="alert-trig at-fired">⚡ Triggered 2h ago</span>
-    </div>
-   </div>
-   <div class="sc" style="margin-top:12px">
-    <div class="sc-hd">Add new alert</div>
-    <div class="alert-form">
-     <select class="alert-sel">
-      <option>Views reach</option>
-      <option>Engagement drops below</option>
-      <option>Comments reach</option>
-      <option>Comment spike (per hour)</option>
-     </select>
-     <input class="alert-inp" type="number" placeholder="e.g. 50000"/>
-     <button class="alert-add">+ Add alert</button>
-    </div>
-   </div>
-   <div style="font-size:12px;color:var(--t3);margin-top:12px">
-    Alerts work across all linked platforms. You can set different thresholds per video.
-   </div>
   </div>
 
   <!-- Roadmap -->
-  <div class="ppanel" id="pp-road">
-   <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px">Product roadmap</div>
-   <div style="font-size:12px;color:var(--t3);margin-bottom:20px">V1 is live and working. Everything below ships in V2.</div>
-
-   <div class="sc">
-    <div style="font-size:11px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px">V1 — Live now</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> MP4 / audio upload
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Whisper transcription
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> YouTube competitor research
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Upload package generation
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Clip package download (TikTok/IG)
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Per-video unified analytics
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Comment inbox + AI replies
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Batch approve comments
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Comment-driven clip detection
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span style="color:var(--gr);font-weight:700">✓</span> Alert system
-     </div>
+  <div class="fpanel" id="pp-road">
+    <div class="fpanel-wrap">
+      <div class="road-section">
+        <div class="road-label live">V1 — Live now</div>
+        <div class="road-grid">
+          <div class="road-item"><span class="ri-check">✓</span>MP4 / audio upload</div>
+          <div class="road-item"><span class="ri-check">✓</span>Whisper transcription (live preview)</div>
+          <div class="road-item"><span class="ri-check">✓</span>YouTube competitor research</div>
+          <div class="road-item"><span class="ri-check">✓</span>5 AI title options with reasoning</div>
+          <div class="road-item"><span class="ri-check">✓</span>SEO description + 30 tags + chapters</div>
+          <div class="road-item"><span class="ri-check">✓</span>.srt captions file</div>
+          <div class="road-item"><span class="ri-check">✓</span>YouTube publish integration</div>
+          <div class="road-item"><span class="ri-check">✓</span>TikTok clip packages (download)</div>
+          <div class="road-item"><span class="ri-check">✓</span>Instagram Reels packages (download)</div>
+          <div class="road-item"><span class="ri-check">✓</span>Per-video unified analytics dashboard</div>
+          <div class="road-item"><span class="ri-check">✓</span>Cross-platform comment inbox</div>
+          <div class="road-item"><span class="ri-check">✓</span>AI reply drafts + batch approve</div>
+          <div class="road-item"><span class="ri-check">✓</span>Comment-driven clip detection</div>
+          <div class="road-item"><span class="ri-check">✓</span>Performance alert system</div>
+        </div>
+      </div>
+      <div class="road-section" style="background:#0a0914;border-color:var(--va16)">
+        <div class="road-label next">V2 — Coming next</div>
+        <div class="road-grid" style="background:var(--va8)">
+          <div class="road-item" style="background:#0a0914"><span class="ri-v2">V2</span>TikTok direct posting</div>
+          <div class="road-item" style="background:#0a0914"><span class="ri-v2">V2</span>Instagram Reels auto-post</div>
+          <div class="road-item" style="background:#0a0914"><span class="ri-v2">V2</span>Auto video crop + caption burn</div>
+          <div class="road-item" style="background:#0a0914"><span class="ri-v2">V2</span>X / Twitter auto-thread</div>
+          <div class="road-item" style="background:#0a0914"><span class="ri-v2">V2</span>Script studio (pre-production)</div>
+          <div class="road-item" style="background:#0a0914"><span class="ri-v2">V2</span>LinkedIn + Pinterest support</div>
+        </div>
+      </div>
     </div>
-   </div>
-
-   <div class="sc" style="background:#0b0916;border-color:#25204a;margin-top:12px">
-    <div style="font-size:11px;font-weight:700;color:var(--pu);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px">V2 — Coming next</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span class="v2-chip" style="position:static;font-size:9px">V2</span> TikTok direct posting
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span class="v2-chip" style="position:static;font-size:9px">V2</span> Instagram Reels auto-post
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span class="v2-chip" style="position:static;font-size:9px">V2</span> Auto video crop + caption burn
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span class="v2-chip" style="position:static;font-size:9px">V2</span> X / Twitter auto-thread
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span class="v2-chip" style="position:static;font-size:9px">V2</span> Cross-platform unified inbox
-     </div>
-     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:6px 0;border-bottom:1px solid var(--b1)">
-      <span class="v2-chip" style="position:static;font-size:9px">V2</span> Script studio (pre-production)
-     </div>
-    </div>
-   </div>
   </div>
 
-  <div class="demo-ctrl">
-   <div class="ctrl-label">CreatorOS — Full Version Demo</div>
-   <div class="ctrl-btns">
-    <button class="cbtn" onclick="closeFull()">Close</button>
-    <button class="cbtn p" onclick="closeFull();startDemo()">Run quick demo →</button>
-   </div>
+  <div class="demo-foot">
+    <div class="demo-foot-label">CreatorOS — Platform overview</div>
+    <div class="demo-foot-btns">
+      <button class="dfbtn" onclick="closeFull()">Close</button>
+      <button class="dfbtn p" onclick="closeFull();startDemo()">Walk through demo →</button>
+    </div>
   </div>
 
- </div><!-- /modal -->
-</div><!-- /full overlay -->
+</div>
+</div>
 
 <script>
 // ── QUICK DEMO ────────────────────────────────
-const TOTAL = 8;
+const TOTAL = 9;
 let cur = 0;
 
-const META = [
-  {url:'localhost:5173/',          title:'CreatorOS — Your videos',         label:'Step 1 of 8 — Videos home'},
-  {url:'localhost:5173/upload',    title:'Upload — CreatorOS',              label:'Step 2 of 8 — Upload your video'},
-  {url:'localhost:5173/upload',    title:'Processing — CreatorOS',          label:'Step 3 of 8 — Live processing pipeline'},
-  {url:'localhost:5173/upload',    title:'Package ready — CreatorOS',       label:'Step 4 of 8 — Upload package generated'},
-  {url:'localhost:5173/dashboard/gut_health_deep_dive', title:'Dashboard — CreatorOS', label:'Step 5 of 8 — Video dashboard + analytics'},
-  {url:'localhost:5173/dashboard/gut_health_deep_dive', title:'Deploy — CreatorOS',    label:'Step 6 of 8 — Deploy across all platforms'},
-  {url:'localhost:5173/dashboard/gut_health_deep_dive', title:'Comments — CreatorOS',  label:'Step 7 of 8 — AI comment inbox'},
-  {url:'localhost:5173/dashboard/gut_health_deep_dive', title:'Clips — CreatorOS',     label:'Step 8 of 8 — Clip intelligence 🔥'},
+const STEPS = [
+  {url:'app.creatoros.io/',                                      title:'CreatorOS — Videos',          label:'Step 1 of 9 — Your video library'},
+  {url:'app.creatoros.io/upload',                                title:'Upload — CreatorOS',          label:'Step 2 of 9 — Upload your video'},
+  {url:'app.creatoros.io/upload/processing',                     title:'Processing — CreatorOS',      label:'Step 3 of 9 — Live processing pipeline'},
+  {url:'app.creatoros.io/upload/done',                           title:'Package ready — CreatorOS',   label:'Step 4 of 9 — Upload package generated'},
+  {url:'app.creatoros.io/v/gut_health_deep_dive',                title:'Dashboard — CreatorOS',       label:'Step 5 of 9 — Video dashboard + analytics'},
+  {url:'app.creatoros.io/v/gut_health_deep_dive/deploy',         title:'Deploy — CreatorOS',          label:'Step 6 of 9 — Deploy to every platform'},
+  {url:'app.creatoros.io/v/gut_health_deep_dive/comments',       title:'Comments — CreatorOS',        label:'Step 7 of 9 — AI comment inbox'},
+  {url:'app.creatoros.io/v/gut_health_deep_dive/clips',          title:'Clip intelligence — CreatorOS', label:'Step 8 of 9 — Clips from traction'},
+  {url:'app.creatoros.io/v/gut_health_deep_dive/alerts',         title:'Alerts — CreatorOS',          label:'Step 9 of 9 — Performance alerts'},
 ];
 
 function showS(i) {
-  for (let k=0;k<TOTAL;k++) {
-    const sc = document.getElementById('s'+k);
+  document.querySelectorAll('.dscreen').forEach((s,k)=>{
+    s.classList.toggle('on', k===i);
+  });
+  for(let k=0;k<TOTAL;k++){
     const sn = document.getElementById('sn'+k);
-    if(sc) sc.classList.remove('active');
-    if(sn) { sn.classList.remove('active','done'); if(k<i) sn.classList.add('done'); if(k===i) sn.classList.add('active'); }
+    if(!sn) continue;
+    sn.classList.remove('active','done');
+    if(k < i) sn.classList.add('done');
+    if(k === i) sn.classList.add('active');
   }
-  const s = document.getElementById('s'+i);
-  if(s) s.classList.add('active');
-  const m = META[i];
-  document.getElementById('qurl').textContent = m.url;
-  document.getElementById('qtitle').textContent = m.title;
-  document.getElementById('qlabel').textContent = m.label;
-  document.getElementById('qprog').style.width = (i/(TOTAL-1)*100)+'%';
-  document.getElementById('qnext').textContent = i===TOTAL-1 ? 'Restart ↺' : 'Next →';
+  const m = STEPS[i];
+  document.getElementById('q-url').textContent = m.url;
+  document.getElementById('q-title').textContent = m.title;
+  document.getElementById('q-label').textContent = m.label;
+  document.getElementById('q-prog').style.width = (i/(TOTAL-1)*100)+'%';
+  document.getElementById('q-next').textContent = i===TOTAL-1 ? 'Restart ↺' : 'Next →';
   cur = i;
 }
 
-function nextS() { showS(cur>=TOTAL-1 ? 0 : cur+1); }
-function prevS() { if(cur>0) showS(cur-1); }
-function goS(i) { showS(i); }
+function nextS(){ showS(cur>=TOTAL-1 ? 0 : cur+1); }
+function prevS(){ if(cur>0) showS(cur-1); }
+function goS(i){ showS(i); }
 
-function startDemo() {
-  document.getElementById('qmo').classList.add('open');
+function startDemo(){
+  document.getElementById('qoverlay').classList.add('open');
   document.body.style.overflow='hidden';
   showS(0);
 }
-function closeDemo() {
-  document.getElementById('qmo').classList.remove('open');
+function closeDemo(){
+  document.getElementById('qoverlay').classList.remove('open');
   document.body.style.overflow='';
 }
-function qmoClick(e) { if(e.target===document.getElementById('qmo')) closeDemo(); }
+function qovClick(e){ if(e.target===document.getElementById('qoverlay')) closeDemo(); }
 
 // comment approve
-function appC(id,btn) {
+function appC(id,btn){
   const c=document.getElementById(id);
   if(!c) return;
-  c.classList.add('approved');
+  c.classList.add('done');
   btn.textContent='✓ Approved';
   btn.disabled=true;
 }
-function doBatch() {
+function doBatch(){
   ['c1','c2','c3'].forEach(id=>{
     const c=document.getElementById(id);
-    if(c) c.classList.add('approved');
-    const b=c?.querySelector('.btn-app');
+    if(c) c.classList.add('done');
+    const b=c?.querySelector('.btn-approve');
     if(b){b.textContent='✓ Approved';b.disabled=true;}
   });
   const bb=document.getElementById('batchbtn');
@@ -1543,27 +1606,27 @@ function doBatch() {
 }
 
 // ── FULL DEMO ─────────────────────────────────
-function openFull() {
-  document.getElementById('fmo').classList.add('open');
+function openFull(){
+  document.getElementById('foverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function closeFull() {
-  document.getElementById('fmo').classList.remove('open');
+function closeFull(){
+  document.getElementById('foverlay').classList.remove('open');
   document.body.style.overflow='';
 }
-function fmoClick(e) { if(e.target===document.getElementById('fmo')) closeFull(); }
+function fovClick(e){ if(e.target===document.getElementById('foverlay')) closeFull(); }
 
-function switchP(id, btn) {
-  document.querySelectorAll('.ppanel').forEach(p=>p.classList.remove('on'));
+function switchFP(id, btn){
+  document.querySelectorAll('.fpanel').forEach(p=>p.classList.remove('on'));
   document.getElementById('pp-'+id).classList.add('on');
-  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
 }
 
 // keyboard
-document.addEventListener('keydown', e=>{
-  const qopen = document.getElementById('qmo').classList.contains('open');
-  const fopen = document.getElementById('fmo').classList.contains('open');
+document.addEventListener('keydown',e=>{
+  const qopen=document.getElementById('qoverlay').classList.contains('open');
+  const fopen=document.getElementById('foverlay').classList.contains('open');
   if(e.key==='Escape'){ if(fopen) closeFull(); else if(qopen) closeDemo(); }
   if(qopen && e.key==='ArrowRight') nextS();
   if(qopen && e.key==='ArrowLeft') prevS();
