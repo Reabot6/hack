@@ -51,3 +51,11 @@ export const detectClips = (videoId) => request('POST', `/clips/${videoId}/detec
 export const getClips = (videoId) => request('GET', `/clips/${videoId}`)
 export const updateClip = (videoId, clipId, status, scheduledFor = null) =>
   request('PATCH', `/clips/${videoId}/${clipId}`, { status, scheduled_for: scheduledFor })
+
+// YouTube publishing
+export const getYouTubeConnection = () => request('GET', '/youtube/connection')
+export const connectYouTube = () => request('GET', '/youtube/connect')
+export const publishToYouTube = (videoId, payload) =>
+  request('POST', `/youtube/${videoId}/publish`, payload)
+export const publishShortToYouTube = (videoId, clipId, payload) =>
+  request('POST', `/youtube/${videoId}/clips/${clipId}/publish`, payload)

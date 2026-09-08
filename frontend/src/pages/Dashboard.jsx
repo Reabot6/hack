@@ -6,7 +6,7 @@ import {
   getClips, detectClips, updateClip,
   getAlerts, createAlert, deleteAlert,
   getNotifications, markNotificationRead,
-  linkYouTube
+  linkYouTube, getYouTubeConnection, connectYouTube, publishToYouTube, publishShortToYouTube
 } from '../lib/api'
 
 const s = {
@@ -92,6 +92,12 @@ export default function Dashboard() {
   const [alertType, setAlertType] = useState('views_threshold')
   const [alertVal, setAlertVal] = useState('')
   const [detectingClips, setDetectingClips] = useState(false)
+  const [youtube, setYoutube] = useState({ configured: false, connected: false })
+  const [publishing, setPublishing] = useState(false)
+  const [publishMessage, setPublishMessage] = useState('')
+  const [publishTitle, setPublishTitle] = useState('')
+  const [publishDescription, setPublishDescription] = useState('')
+  const [privacy, setPrivacy] = useState('private')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -101,13 +107,14 @@ export default function Dashboard() {
   async function loadAll() {
     setLoading(true)
     try {
-      const [v, p, c, cl, al, n] = await Promise.all([
+      const [v, p, c, cl, al, n, connection] = await Promise.all([
         getVideo(videoId),
         getPackage(videoId).catch(() => null),
         getComments(videoId).catch(() => ({ comments: [] })),
         getClips(videoId).catch(() => ({ clips: [] })),
         getAlerts(videoId).catch(() => ({ alerts: [] })),
         getNotifications(videoId).catch(() => ({ notifications: [] })),
+        getYouTubeConnection().catch(() => ({ configured: false, connected: false })),
       ])
       setVideo(v)
       setPkg(p)
@@ -115,6 +122,9 @@ export default function Dashboard() {
       setClips(cl.clips || [])
       setAlerts(al.alerts || [])
       setNotifications(n.notifications || [])
+      setYoutube(connection)
+      setPublishTitle(p?.titles?.[0]?.title || v.original_filename || '')
+      setPublishDescription(p?.description || '')
 
       if (v.youtube_video_id) {
         const a = await getAnalytics(videoId).catch(() => null)
@@ -134,6 +144,30 @@ export default function Dashboard() {
     setVideo(v => ({ ...v, youtube_video_id: ytId.trim() }))
   }
 
+  async function handleConnectYouTube() {
+    try {
+      const res = await connectYouTube()
+      window.open(res.authorization_url, 'creatoros-youtube', 'width=620,height=720')
+      setPublishMessage('Finish connecting your YouTube channel in the window, then refresh this dashboard.')
+    } catch (err) { setPublishMessage(err.message) }
+  }
+
+  async function handlePublish() {
+    setPublishing(true)
+    setPublishMessage('Uploading video and captions to YouTube…')
+    try {
+      const result = await publishToYouTube(videoId, {
+        title: publishTitle, description: publishDescription, tags: pkg?.tags || [], privacy,
+      })
+      setVideo(v => ({ ...v, youtube_video_id: result.youtube_video_id, status: 'published' }))
+      setPublishMessage(`Published successfully. ${result.captions_uploaded ? 'Captions are attached.' : ''}`)
+      window.open(result.url, '_blank', 'noopener,noreferrer')
+      const a = await getAnalytics(videoId).catch(() => null)
+      setAnalytics(a?.stats)
+    } catch (err) { setPublishMessage(err.message) }
+    setPublishing(false)
+  }
+
   async function handleApprove(comment) {
     await approveComment(videoId, comment.id, comment.ai_draft_reply)
     setComments(cs => cs.map(c => c.id === comment.id ? { ...c, status: 'approved' } : c))
@@ -145,8 +179,10 @@ export default function Dashboard() {
   }
 
   async function handleBatchApprove() {
-    await batchApproveComments(videoId)
-    setComments(cs => cs.map(c => c.ai_draft_reply ? { ...c, status: 'approved' } : c))
+    const result = await batchApproveComments(videoId)
+    const failedIds = new Set((result.failures || []).map(f => f.comment_id))
+    setComments(cs => cs.map(c => c.ai_draft_reply && !failedIds.has(c.id) ? { ...c, status: 'approved' } : c))
+    if (failedIds.size) alert(`${result.approved_count} replies posted. ${failedIds.size} need attention.`)
   }
 
   async function handleDetectClips() {
@@ -161,6 +197,18 @@ export default function Dashboard() {
   async function handleClipAction(clipId, status) {
     await updateClip(videoId, clipId, status)
     setClips(cs => cs.map(c => c.id === clipId ? { ...c, status } : c))
+  }
+
+  async function handlePublishShort(clip) {
+    try {
+      const result = await publishShortToYouTube(videoId, clip.id, {
+        title: clip.clip_package?.title || 'New Short',
+        description: clip.clip_package?.description || '',
+        tags: clip.clip_package?.hashtags || [],
+        privacy: 'unlisted',
+      })
+      setClips(cs => cs.map(c => c.id === clip.id ? { ...c, status: 'published', clip_package: { ...c.clip_package, youtube_url: result.url } } : c))
+    } catch (err) { alert(err.message) }
   }
 
   async function handleAddAlert() {
@@ -200,6 +248,28 @@ export default function Dashboard() {
       <div style={s.meta}>
         {video?.topic && `Topic: ${video.topic} · `}
         Status: {video?.status} · {notifications.length > 0 && `🔔 ${notifications.length} notification${notifications.length > 1 ? 's' : ''}`}
+      </div>
+
+      <div style={{ ...s.section, padding: 20, marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div>
+            <div style={s.sectionTitle}>Distribution command center</div>
+            <div style={{ color: '#777', fontSize: 13 }}>One source video. Every channel. One place to act.</div>
+          </div>
+          {!youtube.connected && <button style={s.linkYtBtn} onClick={handleConnectYouTube}>Connect YouTube</button>}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, marginTop: 18 }}>
+          {[
+            ['YouTube', video?.youtube_video_id ? 'Published' : youtube.connected ? 'Ready to publish' : youtube.configured ? 'Connect channel' : 'OAuth setup needed'],
+            ['TikTok', 'Coming next'],
+            ['Instagram Reels', 'Coming next'],
+          ].map(([name, status]) => (
+            <div key={name} style={{ background: '#0d0d0d', border: '1px solid #222', borderRadius: 10, padding: 14 }}>
+              <div style={{ color: '#eee', fontSize: 14, fontWeight: 600 }}>{name}</div>
+              <div style={{ color: name === 'YouTube' && video?.youtube_video_id ? '#4ade80' : '#777', fontSize: 12, marginTop: 6 }}>{status}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Notifications bar */}
@@ -262,6 +332,24 @@ export default function Dashboard() {
       {/* PACKAGE TAB */}
       {tab === 'package' && pkg && (
         <>
+          <div style={s.section}>
+            <div style={s.sectionTitle}>Ready to publish</div>
+            <div style={{ color: '#777', fontSize: 13, marginBottom: 16 }}>Review the AI package, then publish the original video and captions to your connected YouTube channel.</div>
+            <input style={{ ...s.linkYtInput, width: '100%', marginBottom: 10 }} value={publishTitle} onChange={e => setPublishTitle(e.target.value)} placeholder="Video title" />
+            <textarea style={{ ...s.textarea, minHeight: 130 }} value={publishDescription} onChange={e => setPublishDescription(e.target.value)} />
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginTop: 12, flexWrap: 'wrap' }}>
+              <select style={s.select} value={privacy} onChange={e => setPrivacy(e.target.value)}>
+                <option value="private">Private — best for a demo</option>
+                <option value="unlisted">Unlisted</option>
+                <option value="public">Public</option>
+              </select>
+              <button style={s.batchBtn} disabled={!youtube.connected || publishing} onClick={handlePublish}>
+                {publishing ? 'Publishing…' : youtube.connected ? 'Publish to YouTube' : 'Connect YouTube to publish'}
+              </button>
+            </div>
+            {publishMessage && <div style={{ color: publishMessage.startsWith('Published') ? '#4ade80' : '#aaa', fontSize: 13, marginTop: 12 }}>{publishMessage}</div>}
+          </div>
+
           {/* Titles */}
           <div style={s.section}>
             <div style={s.sectionTitle}>
@@ -339,7 +427,7 @@ export default function Dashboard() {
       {tab === 'comments' && (
         <div style={s.section}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <div style={s.sectionTitle} style={{ margin: 0 }}>
+              <div style={{ ...s.sectionTitle, margin: 0 }}>
               Comment inbox · {comments.length} total · {pending.length} pending
             </div>
             {pending.length > 0 && (
@@ -408,6 +496,11 @@ export default function Dashboard() {
                 {c.clip_package?.suggested_post_time && ` · Suggested post: ${c.clip_package.suggested_post_time}`}
               </div>
 
+              {c.clip_package?.rendered_url && (
+                <video controls preload="metadata" style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 16 }} src={c.clip_package.rendered_url} />
+              )}
+              {c.clip_package?.render_error && <div style={{ color: '#fbbf24', fontSize: 12, marginBottom: 12 }}>Render unavailable: {c.clip_package.render_error}</div>}
+
               {c.clip_package && (
                 <div style={{ marginBottom: 16 }}>
                   {c.clip_package.description && <div style={{ color: '#888', fontSize: 13, marginBottom: 8 }}>{c.clip_package.description}</div>}
@@ -427,8 +520,9 @@ export default function Dashboard() {
               )}
 
               <div style={s.clipActions}>
+                {c.clip_package?.rendered_url && <button style={s.approveBtn} disabled={!youtube.connected} onClick={() => handlePublishShort(c)}>Publish Short</button>}
                 <button style={s.scheduleBtn} onClick={() => handleClipAction(c.id, 'scheduled')}>Schedule post</button>
-                <button style={s.approveBtn} onClick={() => copy(`${c.clip_package?.title || ''}\n\n${c.clip_package?.description || ''}\n\n${(c.clip_package?.hashtags || []).join(' ')}`)} style={{ ...s.approveBtn, marginLeft: 0 }}>Copy package</button>
+                <button style={{ ...s.approveBtn, marginLeft: 0 }} onClick={() => copy(`${c.clip_package?.title || ''}\n\n${c.clip_package?.description || ''}\n\n${(c.clip_package?.hashtags || []).join(' ')}`)}>Copy package</button>
                 <button style={s.dismissBtn} onClick={() => handleClipAction(c.id, 'dismissed')}>Dismiss</button>
               </div>
             </div>

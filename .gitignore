@@ -41,6 +41,8 @@ npm-debug.log*
 *.tmp
 *.temp
 /tmp/
+backend/media/
+backend/data/
 
 # Build outputs
 frontend/build/

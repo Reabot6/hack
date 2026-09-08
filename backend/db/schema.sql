@@ -103,3 +103,6 @@ CREATE TABLE IF NOT EXISTS notifications (
   read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- V1 publishing migration. Safe to run against an existing CreatorOS database.
+ALTER TABLE videos ADD COLUMN IF NOT EXISTS youtube_video_id TEXT;

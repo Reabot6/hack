@@ -45,7 +45,8 @@ Tags from what top performers actually use
 Chapters auto-generated from transcript
 Clean .srt captions file ready to upload
          ↓
-POST YOUR VIDEO (you do this on YouTube)
+PUBLISH TO YOUTUBE
+Review the package, publish the retained source video, and attach captions
          ↓
 BACKGROUND WORKER (runs every 2 hours, you don't have to be there)
 Reads new comments
@@ -60,9 +61,8 @@ Comment replies are drafted → approve all or review one by one
 Alerts fired if anything significant happened
          ↓
 CLIPS
-Download clip package (timestamp + title + caption + hashtags)
-Cut in CapCut using exact timestamp
-Post anywhere
+CreatorOS renders a vertical captioned clip from the referenced timestamp.
+Approve it and publish it as an unlisted YouTube Short, or save it for another platform.
 ```
 
 ---
@@ -300,8 +300,11 @@ pip install -r requirements.txt
 
 # Environment variables
 cp .env.example .env
-# Fill in: ANTHROPIC_API_KEY, OPENAI_API_KEY,
-#           YOUTUBE_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
+# Fill in the existing GROQ_API_KEY_*, YOUTUBE_API_KEY, SUPABASE_URL, and SUPABASE_SERVICE_KEY.
+# To publish and reply through a creator's channel, also create a Google OAuth Web client,
+# enable YouTube Data API v3, and add YOUTUBE_OAUTH_CLIENT_ID and
+# YOUTUBE_OAUTH_CLIENT_SECRET. Its redirect URI must be:
+# http://127.0.0.1:8000/api/youtube/oauth/callback
 
 # Run DB schema
 # Copy contents of db/schema.sql into Supabase SQL editor and run

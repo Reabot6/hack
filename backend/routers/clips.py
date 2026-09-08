@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from services import database as db, claude, youtube as yt_service
+from services.media import render_vertical_clip
 
 router = APIRouter(prefix="/api", tags=["clips"])
 
@@ -69,6 +70,18 @@ async def detect_clips(video_id: str):
             "clip_package": clip_package,
             "status": "pending_approval",
         })
+        # Render the actual vertical asset when a source video exists. A failed
+        # render never discards the useful audience-signal recommendation.
+        try:
+            rendered = render_vertical_clip(
+                video_id, saved["id"], float(opp.get("start_seconds", 0)),
+                float(opp.get("end_seconds", 60)), transcript_segments,
+            )
+            clip_package["rendered_url"] = f"/media/{rendered.name}"
+            saved = db.update_clip_opportunity(saved["id"], {"clip_package": clip_package})
+        except Exception as render_error:
+            clip_package["render_error"] = str(render_error)
+            saved = db.update_clip_opportunity(saved["id"], {"clip_package": clip_package})
 
         # Create notification
         db.create_notification({

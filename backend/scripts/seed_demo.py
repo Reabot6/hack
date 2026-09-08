@@ -17,7 +17,7 @@ from services.database import (
     save_clip_opportunity, create_alert, create_notification, get_db
 )
 
-VIDEO_ID = "demo-video-001"
+VIDEO_ID = "00000000-0000-0000-0000-000000000001"
 
 DEMO_TRANSCRIPT = """
 If your stomach looks flat in the morning but bloated by evening, 

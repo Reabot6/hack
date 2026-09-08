@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from services import database as db, claude, youtube as yt_service
+from services import youtube_publish
 
 router = APIRouter(prefix="/api", tags=["dashboard"])
 
@@ -99,6 +100,13 @@ async def approve_comment(video_id: str, comment_id: str, body: ApproveCommentRe
     Approve a comment reply. Marks as approved in DB.
     Note: actual posting to YouTube requires OAuth token (added in next iteration).
     """
+    comment = next((c for c in db.get_comments(video_id) if c["id"] == comment_id), None)
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    try:
+        youtube_publish.reply_to_comment(comment["youtube_comment_id"], body.reply_text)
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"Could not post reply: {exc}")
     db.update_comment(comment_id, {
         "ai_draft_reply": body.reply_text,
         "status": "approved",
@@ -115,12 +123,19 @@ async def skip_comment(video_id: str, comment_id: str):
 
 @router.post("/dashboard/{video_id}/comments/batch-approve")
 async def batch_approve_comments(video_id: str):
-    """Approve all pending comment drafts at once."""
+    """Post every approved draft that can be sent to the connected channel."""
     pending = db.get_comments(video_id, status="pending")
+    approved_count = 0
+    failures = []
     for comment in pending:
         if comment.get("ai_draft_reply"):
-            db.update_comment(comment["id"], {"status": "approved"})
-    return {"approved_count": len([c for c in pending if c.get("ai_draft_reply")])}
+            try:
+                youtube_publish.reply_to_comment(comment["youtube_comment_id"], comment["ai_draft_reply"])
+                db.update_comment(comment["id"], {"status": "approved"})
+                approved_count += 1
+            except Exception as exc:
+                failures.append({"comment_id": comment["id"], "error": str(exc)})
+    return {"approved_count": approved_count, "failures": failures}
 
 
 # ── Alerts ────────────────────────────────────────────────────────────────────

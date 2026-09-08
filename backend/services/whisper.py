@@ -1,66 +1,54 @@
+import whisper
 import os
-from openai import OpenAI
+from pathlib import Path
 
-MAX_FILE_SIZE_MB = 24  # Whisper limit is 25MB, keep buffer
+from services.ffmpeg import FFMPEG
 
-_client = None
+_model = None
 
-def get_client():
-    global _client
-    if _client is None:
-        _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    return _client
 
+def _ensure_ffmpeg_on_path() -> None:
+    """Make the FFmpeg binary used by our converter available to Whisper too."""
+    ffmpeg_dir = str(Path(FFMPEG).parent)
+    if not Path(FFMPEG).is_file():
+        raise RuntimeError(f"FFmpeg executable was not found at {FFMPEG}")
+
+    path_entries = os.environ.get("PATH", "").split(os.pathsep)
+    if ffmpeg_dir not in path_entries:
+        os.environ["PATH"] = os.pathsep.join([ffmpeg_dir, *path_entries])
+
+def get_model():
+    global _model
+    if _model is None:
+        print("[Whisper] Loading model... (first time downloads ~150MB)")
+        _model = whisper.load_model("base")
+        print("[Whisper] Model ready")
+    return _model
 
 def transcribe(audio_path: str) -> dict:
-    """
-    Transcribe audio file using Whisper API.
-    Returns dict with:
-      - text: full transcript string
-      - segments: list of {start, end, text} dicts with timestamps
-    Raises RuntimeError on failure.
-    """
-    file_size_mb = os.path.getsize(audio_path) / (1024 * 1024)
-    if file_size_mb > MAX_FILE_SIZE_MB:
-        raise RuntimeError(
-            f"Audio file is {file_size_mb:.1f}MB. "
-            f"Maximum is {MAX_FILE_SIZE_MB}MB. "
-            "Try uploading a shorter video or audio-only file."
-        )
-
     try:
-        with open(audio_path, "rb") as f:
-            response = get_client().audio.transcriptions.create(
-                model="whisper-1",
-                file=f,
-                response_format="verbose_json",
-                timestamp_granularities=["segment"],
-            )
-
+        _ensure_ffmpeg_on_path()
+        model = get_model()
+        result = model.transcribe(audio_path)
         segments = []
-        if hasattr(response, "segments") and response.segments:
+        if "segments" in result:
             segments = [
                 {
-                    "start": round(s.start, 2),
-                    "end": round(s.end, 2),
-                    "text": s.text.strip(),
+                    "start": round(s["start"], 2),
+                    "end": round(s["end"], 2),
+                    "text": s["text"].strip(),
                 }
-                for s in response.segments
+                for s in result["segments"]
             ]
-
+        print(f"[DEBUG] Whisper done. Text length: {len(result['text'])} Segments: {len(segments)}")
         return {
-            "text": response.text.strip(),
+            "text": result["text"].strip(),
             "segments": segments,
         }
-
     except Exception as e:
         raise RuntimeError(f"Whisper transcription failed: {str(e)}")
 
-
 def format_srt(segments: list) -> str:
-    """
-    Convert timestamped segments to .srt caption format.
-    """
     srt_lines = []
     for i, seg in enumerate(segments, start=1):
         start = _seconds_to_srt_time(seg["start"])
@@ -68,9 +56,7 @@ def format_srt(segments: list) -> str:
         srt_lines.append(f"{i}\n{start} --> {end}\n{seg['text']}\n")
     return "\n".join(srt_lines)
 
-
 def _seconds_to_srt_time(seconds: float) -> str:
-    """Convert float seconds to SRT timestamp format: HH:MM:SS,mmm"""
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     secs = int(seconds % 60)
