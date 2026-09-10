@@ -45,10 +45,20 @@ async def upload_video(request: Request, file: UploadFile = File(...)):
     tmp_audio = TMP_DIR / f"{video_id}_audio.mp3"
 
     try:
-        # Save uploaded file
+        # Stream the file to disk. Reading a 500 MB video into memory made the
+        # old "max 500 MB" promise unreliable on small deployment instances.
+        total_bytes = 0
         async with aiofiles.open(str(tmp_input), "wb") as f:
-            content = await file.read()
-            await f.write(content)
+            while chunk := await file.read(1024 * 1024):
+                total_bytes += len(chunk)
+                if total_bytes > MAX_UPLOAD_MB * 1024 * 1024:
+                    await f.close()
+                    _cleanup(tmp_input)
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"File is larger than {MAX_UPLOAD_MB}MB. Please choose a smaller file.",
+                    )
+                await f.write(chunk)
 
         print(f"[DEBUG] File saved: {tmp_input.stat().st_size} bytes at {tmp_input}")
 
@@ -81,6 +91,12 @@ async def upload_video(request: Request, file: UploadFile = File(...)):
         result = await loop.run_in_executor(None, transcribe, str(tmp_audio))
         print(f"[DEBUG] Transcription done: {len(result['text'])} chars")
 
+        if not result.get("text", "").strip() or not result.get("segments"):
+            raise HTTPException(
+                status_code=422,
+                detail="We could not detect spoken audio in this file. Try a recording with clear speech, or check that the correct audio track was exported.",
+            )
+
         # Delete audio file after transcription
         _cleanup(tmp_audio)
 
@@ -107,6 +123,11 @@ async def upload_video(request: Request, file: UploadFile = File(...)):
         }
 
     except HTTPException:
+        _cleanup(tmp_audio)
+        try:
+            db.update_video(video_id, {"status": "failed"})
+        except Exception:
+            pass
         raise
     except Exception as e:
         _cleanup(tmp_input, tmp_audio)

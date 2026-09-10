@@ -1,0 +1,12 @@
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+aiofiles==25.1.0
+python-dotenv==1.2.3
+python-multipart==0.0.32
+supabase==2.31.0
+groq==1.7.0
+google-api-python-client==2.200.0
+youtube-transcript-api==1.2.4
+openai-whisper==20250625
+APScheduler==3.11.3
+requests==2.34.2

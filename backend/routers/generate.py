@@ -38,6 +38,7 @@ async def generate_package(video_id: str, request: Request):
         today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         cache_key = f"{topic}_{today}"
         research_data = db.get_research_cache(cache_key)
+        research_source = "cached" if research_data else "live"
 
         if not research_data:
             # Step 3: Pull competitor videos
@@ -45,7 +46,7 @@ async def generate_package(video_id: str, request: Request):
             video_ids = yt_service.search_videos(search_query, max_results=30)
 
             if not video_ids:
-                raise HTTPException(status_code=500, detail="No competitor videos found for this topic")
+                raise RuntimeError("No competitor videos were returned for this topic")
 
             # Step 4: Fetch metadata in batch
             videos_meta = yt_service.get_videos_metadata(video_ids)
@@ -122,16 +123,46 @@ async def generate_package(video_id: str, request: Request):
             "video_id": video_id,
             "status": "packaged",
             "topic": topic,
-            "research_cached": research_data is not None,
+            "research_source": research_source,
             "package": package,
         }
 
     except HTTPException:
         raise
     except Exception as e:
-        db.log_error("generate", str(e))
-        db.update_video(video_id, {"status": "transcribed"})
-        raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
+        # A YouTube quota or transcript-provider outage must not make a
+        # creator's upload unusable. Generate from the creator's transcript
+        # with an explicitly labelled empty research context instead.
+        db.log_error("generate.research", str(e))
+        try:
+            fallback_research = {
+                "winning_hooks": [], "winning_structures": [], "common_tags": [],
+                "description_patterns": [], "content_gaps": [], "audience_questions": [],
+                "average_duration_seconds": 0, "dominant_tone": "creator-led",
+                "note": "Live YouTube research was temporarily unavailable.",
+            }
+            db.update_video(video_id, {"status": "generating"})
+            package = claude.generate_upload_package(transcript, segments, fallback_research)
+            existing = db.get_upload_package(video_id)
+            package_fields = {
+                "titles": package.get("titles", []), "description": package.get("description", ""),
+                "tags": package.get("tags", []), "chapters": package.get("chapters", ""),
+                "shorts_moments": package.get("shorts_moments", []),
+            }
+            if existing:
+                db.get_db().table("upload_packages").update(package_fields).eq("video_id", video_id).execute()
+            else:
+                db.save_upload_package({"video_id": video_id, **package_fields})
+            db.update_video(video_id, {"status": "packaged"})
+            return {
+                "video_id": video_id, "status": "packaged", "topic": video.get("topic", ""),
+                "research_source": "transcript_only", "package": package,
+                "notice": "Live YouTube research was unavailable, so this package was generated from your transcript only.",
+            }
+        except Exception as fallback_error:
+            db.log_error("generate.fallback", str(fallback_error))
+            db.update_video(video_id, {"status": "transcribed"})
+            raise HTTPException(status_code=500, detail="We transcribed your file, but could not generate the package. Please retry in a moment.")
 
 
 @router.get("/generate/{video_id}/package")

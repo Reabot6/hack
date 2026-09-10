@@ -6,7 +6,7 @@ import {
   getClips, detectClips, updateClip,
   getAlerts, createAlert, deleteAlert,
   getNotifications, markNotificationRead,
-  linkYouTube, getYouTubeConnection, connectYouTube, publishToYouTube, publishShortToYouTube
+  linkYouTube, getYouTubeConnection, connectYouTube, publishToYouTube, publishShortToYouTube, mediaUrl
 } from '../lib/api'
 
 const s = {
@@ -67,7 +67,15 @@ const s = {
   linkYtBtn: { background: '#1e1a2e', border: '1px solid #3a3060', color: '#7c6cfc', padding: '8px 16px', borderRadius: 8, fontSize: 13, cursor: 'pointer', marginLeft: 8 },
 }
 
-function copy(text) { navigator.clipboard.writeText(text) }
+async function copy(text) {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch {
+    // Clipboard access can be denied on non-HTTPS preview URLs. The visible
+    // editable fields still give the creator a usable copy path.
+    window.prompt('Copy this text:', text)
+  }
+}
 
 function downloadSrt(content, filename = 'captions.srt') {
   const blob = new Blob([content], { type: 'text/plain' })
@@ -99,6 +107,7 @@ export default function Dashboard() {
   const [publishDescription, setPublishDescription] = useState('')
   const [privacy, setPrivacy] = useState('private')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
 
   useEffect(() => {
     loadAll()
@@ -106,6 +115,7 @@ export default function Dashboard() {
 
   async function loadAll() {
     setLoading(true)
+    setLoadError('')
     try {
       const [v, p, c, cl, al, n, connection] = await Promise.all([
         getVideo(videoId),
@@ -132,6 +142,7 @@ export default function Dashboard() {
       }
     } catch (err) {
       console.error(err)
+      setLoadError('We could not load this video workspace. Check your connection and try again.')
     }
     setLoading(false)
   }
@@ -231,6 +242,14 @@ export default function Dashboard() {
   if (loading) return (
     <div style={{ ...s.page, textAlign: 'center', paddingTop: 100 }}>
       <div style={{ color: '#666', fontSize: 16 }}>Loading your dashboard...</div>
+    </div>
+  )
+
+  if (loadError || !video) return (
+    <div style={{ ...s.page, textAlign: 'center', paddingTop: 100 }}>
+      <div style={{ color: '#fca5a5', fontSize: 16, marginBottom: 16 }}>{loadError || 'Video not found.'}</div>
+      <button style={s.linkYtBtn} onClick={loadAll}>Try again</button>
+      <button style={{ ...s.back, marginLeft: 16 }} onClick={() => navigate('/')}>Back to videos</button>
     </div>
   )
 
@@ -497,7 +516,7 @@ export default function Dashboard() {
               </div>
 
               {c.clip_package?.rendered_url && (
-                <video controls preload="metadata" style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 16 }} src={c.clip_package.rendered_url} />
+                <video controls preload="metadata" style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 16 }} src={mediaUrl(c.clip_package.rendered_url)} />
               )}
               {c.clip_package?.render_error && <div style={{ color: '#fbbf24', fontSize: 12, marginBottom: 12 }}>Render unavailable: {c.clip_package.render_error}</div>}
 

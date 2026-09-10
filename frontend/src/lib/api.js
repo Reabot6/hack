@@ -1,7 +1,13 @@
-const BASE = '/api'
+// Leave this unset in local development (Vite proxies /api). In Vercel set
+// VITE_API_BASE to the public API URL, including its /api suffix.
+const BASE = (import.meta.env.VITE_API_BASE || '/api').replace(/\/$/, '')
+const API_ORIGIN = BASE.endsWith('/api') ? BASE.slice(0, -4) : ''
+let accessToken = null
+
+export const setAccessToken = (token) => { accessToken = token }
 
 async function request(method, path, body = null, isFile = false) {
-  const opts = { method, headers: {} }
+  const opts = { method, headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {} }
   if (body && !isFile) {
     opts.headers['Content-Type'] = 'application/json'
     opts.body = JSON.stringify(body)
@@ -14,6 +20,11 @@ async function request(method, path, body = null, isFile = false) {
     throw new Error(err.detail || 'Request failed')
   }
   return res.json()
+}
+
+export const mediaUrl = (path) => {
+  if (!path || path.startsWith('http://') || path.startsWith('https://')) return path
+  return `${API_ORIGIN}${path}`
 }
 
 // Upload

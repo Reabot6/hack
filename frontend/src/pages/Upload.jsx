@@ -2,8 +2,6 @@ import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { uploadFile, generatePackage } from '../lib/api'
 
-const STEPS = ['upload', 'transcribing', 'researching', 'generating', 'done']
-
 const s = {
   page: { maxWidth: 760, margin: '0 auto', padding: '48px 24px' },
   logo: { fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 48, display: 'block' },
@@ -61,6 +59,7 @@ const s = {
   tLabel: { fontSize: 12, color: '#666', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 },
   tText: { color: '#aaa', fontSize: 14, lineHeight: 1.7, fontStyle: 'italic' },
   error: { background: '#1a0808', border: '1px solid #5a1515', borderRadius: 10, padding: 16, color: '#ff6b6b', fontSize: 14, marginTop: 16 },
+  secondaryBtn: { background: 'transparent', color: '#aaa', border: '1px solid #333', borderRadius: 10, padding: '12px 20px', fontSize: 14, cursor: 'pointer', marginTop: 12, width: '100%' },
 }
 
 const STEP_LABELS = {
@@ -77,15 +76,16 @@ export default function Upload() {
   const [step, setStep] = useState(null)
   const [error, setError] = useState(null)
   const [transcript, setTranscript] = useState('')
+  const [progressNote, setProgressNote] = useState('')
   const inputRef = useRef()
   const navigate = useNavigate()
 
   const handleFile = (f) => {
     const allowed = ['video/mp4', 'video/quicktime', 'audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/x-m4a', 'video/x-msvideo']
     const ext = f.name.split('.').pop().toLowerCase()
-    const allowedExt = ['mp4', 'mov', 'mp3', 'wav', 'm4a', 'aac']
+    const allowedExt = ['mp4', 'mov', 'avi', 'mkv', 'webm', 'mp3', 'wav', 'm4a', 'aac']
     if (!allowedExt.includes(ext)) {
-      setError(`Unsupported file type. Upload MP4, MOV, MP3, WAV, or M4A.`)
+      setError(`Unsupported file type. Upload MP4, MOV, AVI, MKV, WEBM, MP3, WAV, M4A, or AAC.`)
       return
     }
     setFile(f)
@@ -103,22 +103,32 @@ export default function Upload() {
     if (!file) return
     setError(null)
     setStep('upload')
+    setProgressNote('Saving your source file securely…')
 
     try {
       const fd = new FormData()
       fd.append('file', file)
+      setStep('transcribing')
+      setProgressNote('Extracting audio and transcribing your actual recording. This can take a few minutes for longer videos.')
       const uploadRes = await uploadFile(fd)
       const videoId = uploadRes.video_id
       setTranscript(uploadRes.transcript_preview || '')
       setStep('researching')
+      setProgressNote('Finding current patterns in your YouTube niche…')
 
+      // The generation request performs research and package creation as one
+      // server job. Move to the final visible stage immediately so the UI
+      // never suggests transcription is still running.
+      setStep('generating')
+      setProgressNote('Turning your transcript and research into an upload-ready package…')
       const genRes = await generatePackage(videoId)
       setStep('done')
+      setProgressNote(genRes.notice || 'Your package is ready. Opening your workspace…')
 
       setTimeout(() => navigate(`/dashboard/${videoId}`), 800)
     } catch (err) {
       setError(err.message)
-      setStep(null)
+      setProgressNote('Your file has not been lost. Fix the issue and try again.')
     }
   }
 
@@ -127,7 +137,7 @@ export default function Upload() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   }
 
-  const stepKeys = ['upload', 'researching', 'generating', 'done']
+  const stepKeys = ['upload', 'transcribing', 'researching', 'generating', 'done']
   const currentIdx = step ? stepKeys.indexOf(step) : -1
 
   return (
@@ -157,11 +167,11 @@ export default function Upload() {
           >
             <div style={s.dropIcon}>🎬</div>
             <div style={s.dropTitle}>Drop your video or audio here</div>
-            <div style={s.dropSub}>MP4, MOV, MP3, WAV, M4A · Max 500MB</div>
+            <div style={s.dropSub}>MP4, MOV, AVI, MKV, WEBM, MP3, WAV, M4A, AAC · Max 500MB</div>
             <input
               ref={inputRef}
               type="file"
-              accept=".mp4,.mov,.mp3,.wav,.m4a,.aac"
+              accept=".mp4,.mov,.avi,.mkv,.webm,.mp3,.wav,.m4a,.aac"
               style={{ display: 'none' }}
               onChange={(e) => e.target.files[0] && handleFile(e.target.files[0])}
             />
@@ -210,7 +220,11 @@ export default function Upload() {
             </div>
           )}
 
+          {progressNote && <div style={{ color: '#777', fontSize: 13, marginTop: 18, lineHeight: 1.5 }}>{progressNote}</div>}
+
           {error && <div style={s.error}>⚠️ {error}</div>}
+          {error && <button style={s.secondaryBtn} onClick={handleStart}>Try again</button>}
+          {error && <button style={s.secondaryBtn} onClick={() => { setStep(null); setError(null); setProgressNote('') }}>Choose a different file</button>}
         </div>
       )}
     </div>

@@ -1,14 +1,27 @@
 import subprocess
 import os
+import shutil
 from pathlib import Path
 
-FFMPEG = r"C:\Users\HomePC\AppData\Local\Microsoft\WinGet\Links\ffmpeg.exe"
+# Local development can keep using the Windows install, while Docker/hosting
+# environments use the system binary (or an explicit FFMPEG_PATH).
+FFMPEG = (
+    os.getenv("FFMPEG_PATH")
+    or shutil.which("ffmpeg")
+    or r"C:\Users\HomePC\AppData\Local\Microsoft\WinGet\Links\ffmpeg.exe"
+)
+
+
+def _ffmpeg_binary() -> str:
+    if not Path(FFMPEG).is_file():
+        raise RuntimeError("FFmpeg is not installed. Install it on the server or set FFMPEG_PATH.")
+    return FFMPEG
 
 
 def extract_audio(input_path: str, output_path: str) -> str:
     try:
         subprocess.run(
-            [FFMPEG, "-i", str(input_path), "-vn", "-acodec", "mp3", "-b:a", "64k", "-y", str(output_path)],
+            [_ffmpeg_binary(), "-i", str(input_path), "-vn", "-acodec", "mp3", "-b:a", "64k", "-y", str(output_path)],
             check=True,
             capture_output=True,
         )
@@ -20,7 +33,7 @@ def extract_audio(input_path: str, output_path: str) -> str:
 def compress_audio(input_path: str, output_path: str) -> str:
     try:
         subprocess.run(
-            [FFMPEG, "-i", str(input_path), "-acodec", "mp3", "-b:a", "64k", "-y", str(output_path)],
+            [_ffmpeg_binary(), "-i", str(input_path), "-acodec", "mp3", "-b:a", "64k", "-y", str(output_path)],
             check=True,
             capture_output=True,
         )
